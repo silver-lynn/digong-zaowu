@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-const {parts,projects,techs,fresh,sanitize,evaluate,network,unlock}=Tiangong;
+const {parts,projects,techs,fresh,sanitize,evaluate,network,unlock,geometry,planePoint,bucketPose}=Tiangong;
 const $=id=>document.getElementById(id), $$=s=>[...document.querySelectorAll(s)];
 const KEY='tiangong-workshop-v1';let state;try{state=sanitize(JSON.parse(localStorage.getItem(KEY)))}catch{state=fresh()}
 let selected=null,view='bench',running=false,startTime=0,resultTimer=0,toastTimer=0,history=[],craft=null,drag=null,freeDrag=null,hover=null,particles=[],lastBell=-1,audioContext=null,lastSound=0;
@@ -10,12 +10,12 @@ const worldArt=document.createElement('img');worldArt.src='assets/courtyard-v2.w
 // Source rectangles leave each object's natural highlights intact; destination
 // anchors match the existing assembly pivots and pointer coordinates.
 const propAtlas={
- body:[12,45,340,268,-155,-110,310,144],axle:[376,134,340,90,-144,-21,288,49],
+ body:[12,45,340,268,-155,-130,310,244],axle:[376,134,340,90,-144,-21,288,49],
  wheel:[766,28,281,289,-56,-57,112,116],bigwheel:[1113,13,310,326,-77,-79,155,163],
- support:[38,377,313,325,-110,-112,220,228],waterwheel:[378,358,349,342,-100,-99,203,199],
- crank:[747,393,359,239,-20,-52,116,78],bucket:[1154,367,228,337,-29,-56,59,87],
- gear:[25,721,309,326,-64,-68,130,137],cam:[409,763,267,255,-43,-41,82,78],
- striker:[722,802,361,173,-81,-32,157,75],bell:[1159,725,228,323,-43,-72,87,123]
+ support:[38,377,313,325,-110,-112,220,228],waterwheel:[378,358,349,342,-100,-101.8,203,199],
+ crank:[747,393,359,239,-18,-57.4,116,78],bucket:[1154,367,228,337,-29,-56,59,87],
+ gear:[25,721,309,326,-64,-68,130,137],cam:[409,763,267,255,-49.5,-38.5,82,78],
+ striker:[722,802,361,173,-14,-35.5,157,75],bell:[1159,725,228,323,-43,-72,87,123]
 };
 const propArt=document.createElement('img');propArt.onload=()=>{refresh();if(view==='collection')renderCollection()};propArt.src='assets/props-v3.png';
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));$('saved-label').textContent='进度自动记下'}catch{$('saved-label').textContent='当前浏览器无法保存'}}
@@ -44,7 +44,7 @@ else if(kind==='axle'){wood(c,-139,-7,278,17,7);circle(c,-139,2,9,'#d1ad73','#93
 else if(kind==='support'){wood(c,-100,76,212,18,20);wood(c,-88,-93,19,171,13);wood(c,73,-93,19,171,13);wood(c,-99,-94,192,17,15);line(c,-80,70,64,-79,'#926638',9)}
 else if(kind==='crank'){c.rotate(angle);circle(c,0,0,18,'#b98d48','#7c663d');line(c,0,0,49,-25,'#be9a5a',13);circle(c,50,-25,11,'#3d6055','#223e39');wood(c,47,-58,11,35,4)}
 else if(kind==='bucket'){poly(c,[[-27,-20],[27,-20],[20,26],[-20,26]],'#a97740','#78542f');poly(c,[[-27,-20],[0,-29],[27,-20],[0,-10]],'#6e5437','#c79e65');for(let i=-12;i<20;i+=11)line(c,i,-7,i,20,'#d0a76a',1);line(c,-24,-1,24,-1,'#4b6655',3);line(c,-21,18,21,18,'#4b6655',3);c.strokeStyle='#bea66c';c.lineWidth=3;c.beginPath();c.arc(0,-15,25,Math.PI,0);c.stroke()}
-else if(kind==='striker'){c.rotate(angle);wood(c,-80,-5,130,11,4);wood(c,43,-24,24,46,8)}
+else if(kind==='striker'){c.rotate(angle);wood(c,-14,-5,130,11,4);wood(c,109,-24,24,46,8)}
 else if(kind==='bell'){c.rotate(angle);const g=c.createLinearGradient(-40,0,40,0);g.addColorStop(0,'#8d722f');g.addColorStop(.5,'#debf69');g.addColorStop(1,'#aa8837');circle(c,0,-40,9,null,'#9d8237');c.beginPath();c.moveTo(-10,-40);c.bezierCurveTo(-42,-32,-20,3,-44,21);c.quadraticCurveTo(0,39,44,21);c.bezierCurveTo(20,3,42,-32,10,-40);c.closePath();c.fillStyle=g;c.fill();c.strokeStyle='#8f7738';c.lineWidth=2;c.stroke();c.beginPath();c.ellipse(0,23,43,10,0,0,7);c.fillStyle='#907438';c.fill();circle(c,0,25,8,'#d7b361');line(c,-29,10,29,10,'#eedda0',2)}
 c.restore();}
 function camera(el,width,height,w,h){const scene=el===canvas,s=Math.min(width/(scene?(width<=800?840:1150):w),height/(scene?600:h));return{s,x:(width-w*s)/2,y:(height-h*s)/2}}
@@ -72,16 +72,53 @@ function background(c){
  c.font='10px Georgia';c.fillStyle='#e9d8ae';c.fillText('TIANGONG   ·   百工造物',386,442);
 }
 function ghost(c,slot){c.save();const target=selected&&parts[selected].kind===slot.kind;c.strokeStyle=target?'#f0d08d':'#c2cbb2';c.fillStyle=target?'#ead7a326':'#b5c1a114';c.lineWidth=1.6;c.setLineDash([5,5]);c.beginPath();c.ellipse(slot.x,slot.y,slot.kind==='body'?151:slot.kind==='axle'?135:slot.kind==='support'?75:slot.kind==='waterwheel'?88:44,slot.kind==='body'?36:slot.kind==='axle'?16:slot.kind==='support'?90:slot.kind==='waterwheel'?88:44,0,0,7);c.fill();c.stroke();c.setLineDash([]);c.font='13px Microsoft YaHei';c.textAlign='center';c.fillStyle=target?'#fff1c6':'#e0e4d5';c.fillText('+ '+slot.name,slot.x,slot.y+5);c.restore()}
-function drawMachine(c,id,assembly,t=0,preview=false){const p=projects[id];let dx=0,dy=0,tilt=0;const active=running&&!preview;
- if(id==='car'&&active){const wobble=evaluate(id,assembly).type==='wobble';dx=Math.sin(t*.85)*95;dy=wobble?Math.sin(t*3)*10:0;tilt=wobble?Math.sin(t*3)*.08:0;c.save();c.translate(490+dx,320+dy);c.rotate(tilt);c.translate(-490,-320)}else c.save();
- c.save();c.globalAlpha=.18;c.fillStyle='#243927';c.beginPath();c.ellipse(id==='water'?495:500,405,id==='car'?178:170,23,0,0,7);c.fill();c.restore();
- if(id==='car'&&assembly.body){drawPart(c,'wheel',429,309,.72,active?t*3:0);drawPart(c,'wheel',629,309,.72,active?t*3:0);wood(c,418,304,13,44,5);wood(c,611,304,13,44,5)}
- for(const slot of p.slots){const part=assembly[slot.id];if(!part){if(!preview)ghost(c,slot);continue}let x=slot.x,y=slot.y,angle=0,scale=1;
- if(active){if(['wheel','gear','waterwheel','crank'].includes(parts[part].kind))angle=t*(id==='water'?.8:2.5);if(parts[part].kind==='cam')angle=-t*2.5;if(parts[part].kind==='striker')angle=-Math.max(0,Math.sin(t*2.5))*.3;if(parts[part].kind==='bell')angle=Math.sin(t*16)*Math.max(0,Math.cos(t*2.5))*.045;if(part==='bucket'){x=450+Math.cos(-t*.8-2.3)*94;y=290+Math.sin(-t*.8-2.3)*94;scale=.68}}
- if(part==='crank')scale=.8;if(part==='gear')scale=1.04;drawPart(c,part,x,y,scale,angle);
+function previewPart(c,id,x,y,scale){const r=propAtlas[id];drawPart(c,id,x-(r[4]+r[6]/2)*scale,y-(r[5]+r[7]/2)*scale,scale)}
+function freeHit(n,p){const r=propAtlas[n.part],x=(p.x-n.x)/.65,y=(p.y-n.y)/.65;return x>=r[4]-8&&x<=r[4]+r[6]+8&&y>=r[5]-8&&y<=r[5]+r[7]+8}
+function slotDistance(slot,p){const points=[slot];if(state.project==='car'){
+ if(slot.kind==='wheel')points.push({x:slot.x+geometry.car.depth.x,y:slot.y+geometry.car.depth.y});
+ if(slot.kind==='axle')for(const a of geometry.car.near)points.push({x:a.x+geometry.car.depth.x/2,y:a.y+geometry.car.depth.y/2});
+ }return Math.min(...points.map(a=>Math.hypot(a.x-p.x,a.y-p.y)))}
+// Rotate in the object's local plane, then project. Projecting after rotation
+// keeps wheel hubs fixed and prevents the entire wheel plane from wobbling.
+function projectedPart(c,id,point,plane,scale=1,angle=0){c.save();c.translate(point.x,point.y);c.transform(...plane,0,0);drawPart(c,id,0,0,scale,angle);c.restore()}
+function shaft(c,a,b){drawPart(c,'axle',(a.x+b.x)/2,(a.y+b.y)/2,Math.hypot(b.x-a.x,b.y-a.y)/288,Math.atan2(b.y-a.y,b.x-a.x))}
+function hangingBell(c,p,angle){c.save();c.translate(p.x,p.y-63);c.rotate(angle);drawPart(c,'bell',0,63);c.restore()}
+function drawMachine(c,id,assembly,t=0,preview=false){const p=projects[id],active=running&&!preview;c.save();
+ if(id==='car'&&active){const wobble=evaluate(id,assembly).type==='wobble';c.translate(490+Math.sin(t*.85)*95,320+(wobble?Math.sin(t*3)*7:0));c.rotate(wobble?Math.sin(t*3)*.04:0);c.translate(-490,-320)}
+ c.save();c.globalAlpha=.18;c.fillStyle='#243927';c.beginPath();c.ellipse(500,405,id==='car'?178:170,23,0,0,7);c.fill();c.restore();
+ if(id==='car'){
+  const g=geometry.car,far=g.near.map(p=>({x:p.x+g.depth.x,y:p.y+g.depth.y})),spin=active?t*2.5:0;
+  // Each wheel slot is a matched pair. Never invent wheels when only the board exists.
+  for(let i=0;i<2;i++){const part=assembly[i?'right':'left'];if(part)projectedPart(c,part,far[i],g.plane,1,spin)}
+  if(assembly.axle)for(let i=0;i<2;i++)shaft(c,g.near[i],far[i]);
+  if(assembly.body)drawPart(c,assembly.body,g.body.x,g.body.y);
+  for(let i=0;i<2;i++){const part=assembly[i?'right':'left'];if(part)projectedPart(c,part,g.near[i],g.plane,1,spin)}
+ }else if(id==='water'){
+  const g=geometry.water,spin=active?-t*.8:0;
+  c.fillStyle='#678f8a';c.beginPath();c.ellipse(455,417,122,13,0,0,7);c.fill();
+  // The shaft and handle share the waterwheel's axle instead of floating beside it.
+  if(assembly.support)drawPart(c,'support',515,320);
+  if(assembly.waterwheel||assembly.crank)shaft(c,g.hub,g.handle);
+  if(assembly.crank)projectedPart(c,'crank',g.handle,g.plane,.8,spin);
+  if(assembly.waterwheel)projectedPart(c,'waterwheel',g.hub,g.plane,1,spin);
+  if(assembly.bucket){const b=bucketPose(active?t:0);line(c,b.x,b.y,b.x,b.y+7,'#ba9a5e',3);drawPart(c,'bucket',b.x,b.y+32,.68)}
+  if(assembly.support){c.save();c.translate(487,201);c.transform(...g.plane,0,0);wood(c,0,0,171,10,9);c.restore();line(c,637,250.75,637,399,'#a48754',6)}
+  if(active&&assembly.bucket&&assembly.waterwheel){const b=bucketPose(t);if(b.y<233&&b.x>450)for(let i=0;i<8;i++){const f=(t*1.5+i/8)%1;circle(c,b.x+(493-b.x)*f,b.y+f*30,2,'#a6d9dc')}c.save();c.translate(487,201);c.transform(...g.plane,0,0);c.fillStyle='#8fbdb4';c.fillRect(4,-2,Math.min(t*8,161),3);c.restore()}
+ }else if(id==='bell'){
+  const g=geometry.bell,spin=active?t*2.5:0,camSpin=-spin*1.6,lift=active?Math.max(0,Math.sin(camSpin)):0,lever=-lift*.28;
+  if(assembly.support)drawPart(c,'support',505,325);
+  if(assembly.gear)projectedPart(c,'gear',g.gear,g.plane,1.04,spin);
+  if(assembly.cam)projectedPart(c,'cam',g.cam,g.plane,1,camSpin);
+  if(assembly.support&&assembly.bell){line(c,587,255,642,215,'#926d3f',9);line(c,587,252,642,212,'#c6a46b',2);line(c,642,215,642,228,'#bda267',3)}
+  if(assembly.bell)hangingBell(c,g.bell,active?Math.sin(t*16)*Math.max(0,1-lift*4)*.025:0);
+  if(assembly.striker){
+   c.save();c.translate(g.pivot.x,g.pivot.y);c.transform(...g.plane,0,0);c.rotate(lever);
+   if(assembly.cam)wood(c,29,5,8,14,2);drawPart(c,'striker',0,0);circle(c,0,0,7,'#58796b','#d1ad6d');c.restore();
+  }
+  if(active&&assembly.bell&&lift<.12)for(let i=0;i<3;i++){c.beginPath();c.arc(g.bell.x,g.bell.y,50+i*10,-.7,.5);c.strokeStyle='#bea258';c.lineWidth=1.5;c.stroke()}
  }
- if(id==='water'){wood(c,580,177,164,12,13);line(c,615,190,615,380,'#a48754',7);c.fillStyle='#678f8a';c.beginPath();c.ellipse(455,417,122,13,0,0,7);c.fill();if(active){for(let i=0;i<12;i++){const phase=(t*1.1+i/12)%1;circle(c,584+Math.sin(phase*14+i)*9,182+phase*213,2.7,'#81bac1')}c.fillStyle='#8fbdb4';c.fillRect(670,172,Math.min(t*8,72),5)}}
- if(id==='bell'&&active&&Math.cos(t*2.5)>.85){for(let i=0;i<3;i++){c.beginPath();c.arc(655,247,50+i*10,-.7,.5);c.strokeStyle='#bea258';c.lineWidth=1.5;c.stroke()}}
+ // Empty anchors are drawn last so the board cannot hide a wheel/axle target.
+ if(!preview)for(const slot of p.slots)if(!assembly[slot.id])ghost(c,slot);
  c.restore();}
 function drawFree(c,t){const power=network(state.free);for(const a of state.free)for(const b of state.free)if(a.id<b.id&&Math.hypot(a.x-b.x,a.y-b.y)<=150){line(c,a.x,a.y,b.x,b.y,running&&power.has(a.id)?'#ecd78c':'#a7b299',3);if(running&&power.has(a.id)){const f=(t*.5)%1;circle(c,a.x+(b.x-a.x)*f,a.y+(b.y-a.y)*f,4,'#fff0ad')}}
  for(const p of state.free){const on=running&&power.has(p.id),kind=parts[p.part].kind;const angle=on?(['wheel','gear','waterwheel','crank','cam'].includes(kind)?t*2*(p.id%2?1:-1):['striker','bell'].includes(kind)?Math.sin(t*5)*.15:0):0;drawPart(c,p.part,p.x,p.y,.65,angle);if(hover?.id===p.id){circle(c,p.x,p.y,46,null,'#ead494')}}
@@ -91,7 +128,7 @@ function frame(now){if(view==='bench'&&!document.hidden){fit(ctx,canvas,1000,560
 function refresh(){const p=projects[state.project],a=state.assemblies[state.project]||{};save();$('project-title').textContent=p.title;$('project-tag').textContent=p.tag;$('scene-number').textContent='造物 · '+({car:'001',water:'002',bell:'003',free:'自由'}[state.project]);$('tech-count').textContent=state.tech.length+'/9';$('assembly-count').textContent=state.project==='free'?state.free.length+' / 18 件':`已装 ${Object.keys(a).length} / ${p.slots.length} 件`;$('free-caption').textContent=state.completed.length===3?'所有零件，随你拼':'完成三件造物后开启';
  $$('[data-project]').forEach(b=>{b.classList.toggle('active',b.dataset.project===state.project);b.setAttribute('aria-pressed',b.dataset.project===state.project);if(b.querySelector('i'))b.querySelector('i').textContent=state.completed.includes(b.dataset.project)?'✓':''});
  $('parts-tray').innerHTML=p.parts.map(id=>`<button class="part-card ${selected===id?'selected':''}" data-part="${id}" aria-label="拿取${parts[id].name}" aria-pressed="${selected===id}"><span class="part-status">${parts[id].craft?(state.crafted.includes(id)?'已会做':'手作'):''}</span><canvas width="180" height="128" aria-hidden="true"></canvas><strong>${parts[id].name}</strong><small>${parts[id].craft&&!state.crafted.includes(id)?'先亲手加工':'拿取 · 放上桌'}</small></button>`).join('');
- $$('.part-card').forEach(b=>{const c=b.querySelector('canvas').getContext('2d');c.translate(90,65);const id=b.dataset.part;drawPart(c,id,0,0,['body','axle','support','waterwheel'].includes(id)?.5:.75);b.addEventListener('click',()=>selectPart(id));b.addEventListener('pointerdown',e=>startDrag(e,id,b))});
+ $$('.part-card').forEach(b=>{const c=b.querySelector('canvas').getContext('2d');c.translate(90,65);const id=b.dataset.part;previewPart(c,id,0,0,['body','axle','support','waterwheel'].includes(id)?.5:.75);b.addEventListener('click',()=>selectPart(id));b.addEventListener('pointerdown',e=>startDrag(e,id,b))});
  if(state.project==='free'){$('slot-list').innerHTML='<button class="slot-button" id="free-place">＋ 放到空位</button><button class="slot-button" id="free-last">− 取下最后一件</button>';$('free-place').onclick=()=>{if(!selected)return say('先从零件匣里拿一件。');const i=state.free.length;place(selected,{x:230+i%5*130,y:240+Math.floor(i/5)*70})};$('free-last').onclick=()=>{if(!state.free.length)return;remember();stop();state.free.pop();refresh()}}
  else{$('slot-list').innerHTML=p.slots.map(s=>`<button class="slot-button ${a[s.id]?'filled':''} ${selected&&parts[selected].kind===s.kind?'target':''}" data-slot="${s.id}">${a[s.id]?'✓':'＋'} ${s.name}</button>`).join('');$$('[data-slot]').forEach(b=>b.onclick=()=>slotAction(b.dataset.slot))}
  const n=Object.keys(a).length,done=n===p.slots.length&&n>0;for(const id of ['craft','build','run'])$('step-'+id).classList.remove('active','done');$('step-'+(running||done?'run':n||selected?'build':'craft')).classList.add('active');if(n)$('step-craft').classList.add('done');if(done)$('step-build').classList.add('done');
@@ -105,11 +142,11 @@ function selectPart(id){stop();if(parts[id].craft&&!state.crafted.includes(id)){
 function slotAction(id){const slot=projects[state.project].slots.find(s=>s.id===id);if(selected){if(parts[selected].kind!==slot.kind)return say('这件零件不适合这里。试试亮起的位置。');place(selected,slot)}else if(state.assemblies[state.project][id]){remember();stop();const p=state.assemblies[state.project][id];delete state.assemblies[state.project][id];selected=p;refresh();say('取下了'+parts[p].name+'，可以换个位置。')}else say('先从下方零件匣拿取'+slot.name+'。')}
 function place(id,pos){stop();if(state.project==='free'){if(state.free.length>=18)return say('桌面放满啦，先取下一件再继续。');remember();state.free.push({id:Math.max(0,...state.free.map(p=>p.id))+1,part:id,x:Math.max(110,Math.min(840,pos.x)),y:Math.max(150,Math.min(430,pos.y))})}else{const s=pos.id?pos:projects[state.project].slots.filter(s=>s.kind===parts[id].kind).sort((a,b)=>Math.hypot(a.x-pos.x,a.y-pos.y)-Math.hypot(b.x-pos.x,b.y-pos.y))[0];if(!s||(!pos.id&&Math.hypot(s.x-pos.x,s.y-pos.y)>135))return say('再靠近亮起的虚线位置一点。');remember();state.assemblies[state.project][s.id]=id;pos=s}selected=null;sparkle(pos.x,pos.y,10);sound();refresh();const a=state.assemblies[state.project];$('guide-copy').textContent=state.project==='free'?'拼上了。继续加零件，或拉动把手试试看。':Object.keys(a).length===projects[state.project].slots.length?'全部拼好了！拉动把手，让它动起来。':'咔哒，装好了。再拿一件，继续拼。'}
 function startDrag(e,id,button){if(e.button!==0)return;drag={id,x:e.clientX,y:e.clientY,button,moved:false};if(e.pointerType==='mouse')button.setPointerCapture(e.pointerId)}
-window.addEventListener('pointermove',e=>{if(!drag)return;if(!drag.moved&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<9)return;drag.moved=true;if(!drag.proxy){const p=document.createElement('canvas');p.className='drag-proxy';p.width=180;p.height=180;drawPart(p.getContext('2d'),drag.id,90,90,['body','axle','support','waterwheel'].includes(drag.id)?.45:.7);document.body.append(p);drag.proxy=p}drag.proxy.style.left=(e.clientX-45)+'px';drag.proxy.style.top=(e.clientY-45)+'px'});
+window.addEventListener('pointermove',e=>{if(!drag)return;if(!drag.moved&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<9)return;drag.moved=true;if(!drag.proxy){const p=document.createElement('canvas');p.className='drag-proxy';p.width=180;p.height=180;previewPart(p.getContext('2d'),drag.id,90,90,['body','axle','support','waterwheel'].includes(drag.id)?.45:.7);document.body.append(p);drag.proxy=p}drag.proxy.style.left=(e.clientX-45)+'px';drag.proxy.style.top=(e.clientY-45)+'px'});
 window.addEventListener('pointerup',e=>{if(!drag)return;const d=drag;drag=null;d.proxy?.remove();if(!d.moved)return;const r=canvas.getBoundingClientRect();d.button.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation()},{capture:true,once:true});if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;if(parts[d.id].craft&&!state.crafted.includes(d.id)){beginCraft(d.id);return}selected=d.id;place(d.id,worldPoint(e,canvas))});
 window.addEventListener('pointercancel',()=>{drag?.proxy?.remove();drag=null;freeDrag=null});
-canvas.addEventListener('pointerdown',e=>{if(running){say('先停下装置，就可以继续拼。');return}const p=worldPoint(e,canvas);if(selected){place(selected,p);return}if(state.project==='free'){const hit=[...state.free].reverse().find(n=>Math.hypot(n.x-p.x,n.y-p.y)<55);if(hit){freeDrag={hit,original:{x:hit.x,y:hit.y},start:p,moved:false};remember();canvas.setPointerCapture(e.pointerId)}}else{const hit=[...projects[state.project].slots].reverse().find(s=>Math.hypot(s.x-p.x,s.y-p.y)<65);if(hit)slotAction(hit.id)}});
-canvas.addEventListener('pointermove',e=>{const p=worldPoint(e,canvas);if(freeDrag){if(Math.hypot(p.x-freeDrag.start.x,p.y-freeDrag.start.y)>8)freeDrag.moved=true;if(freeDrag.moved){freeDrag.hit.x=Math.max(110,Math.min(840,p.x));freeDrag.hit.y=Math.max(150,Math.min(430,p.y))}}hover=state.project==='free'?state.free.find(n=>Math.hypot(n.x-p.x,n.y-p.y)<55):null});
+canvas.addEventListener('pointerdown',e=>{if(running){say('先停下装置，就可以继续拼。');return}const p=worldPoint(e,canvas);if(selected){place(selected,p);return}if(state.project==='free'){const hit=[...state.free].reverse().find(n=>freeHit(n,p));if(hit){freeDrag={hit,original:{x:hit.x,y:hit.y},start:p,moved:false};remember();canvas.setPointerCapture(e.pointerId)}}else{const hit=[...projects[state.project].slots].sort((a,b)=>slotDistance(a,p)-slotDistance(b,p)).find(s=>slotDistance(s,p)<65);if(hit)slotAction(hit.id)}});
+canvas.addEventListener('pointermove',e=>{const p=worldPoint(e,canvas);if(freeDrag){if(Math.hypot(p.x-freeDrag.start.x,p.y-freeDrag.start.y)>8)freeDrag.moved=true;if(freeDrag.moved){freeDrag.hit.x=Math.max(110,Math.min(840,p.x));freeDrag.hit.y=Math.max(150,Math.min(430,p.y))}}hover=state.project==='free'?state.free.find(n=>freeHit(n,p)):null});
 canvas.addEventListener('pointerup',()=>{if(!freeDrag)return;if(!freeDrag.moved){selected=freeDrag.hit.part;state.free=state.free.filter(n=>n.id!==freeDrag.hit.id)}freeDrag=null;refresh()});
 function run(){if(running){stop();refresh();return}if(state.project==='free'){if(!state.free.length)return say('先放一件零件，再拉把手。');const power=network(state.free);$('guide-copy').textContent=`${power.size} 件零件开始接力了。${power.size<state.free.length?'有零件离得太远，靠近一点再试。':'再加点不一样的零件，会发生什么？'}`;if(power.size>=4&&new Set(state.free.filter(p=>power.has(p.id)).map(p=>p.part)).size>=3&&!state.discoveries.includes('mixed')){state.discoveries.push('mixed');say('发现新造物：百工大合奏 ✧');sound('win')}}else{const result=evaluate(state.project,state.assemblies[state.project]);if(!result.ok){say(result.message);$('guide-copy').textContent=result.message;return}$('guide-copy').textContent=result.message;if(result.type==='wobble'){if(!state.discoveries.includes('wobble'))state.discoveries.push('wobble');say('意外发现：不走寻常路的小木车 ✧')}const first=!state.completed.includes(state.project);unlock(state,state.project);if(first){const id=state.project;resultTimer=setTimeout(()=>showResult(id,result),4300)}else say(result.message)}running=true;startTime=performance.now();lastBell=-1;sound();$('run-button').classList.add('running');$('run-label').textContent='停下来看看';refresh()}
 function showResult(id,result){if(id!==state.project||!running)return;const p=projects[id];$('result-eyebrow').textContent='第 '+state.completed.length+' 件造物，记下了';$('result-title').textContent=({car:result.type==='wobble'?'它拐着弯跑起来了！':'它真的跑起来了！',water:'水真的往高处走了！',bell:'听，你做的铃响了！'})[id];$('result-copy').textContent=p.note;$('result-tech').innerHTML=p.tech.map(id=>'<span>✧ '+techs.find(t=>t.id===id).name+'</span>').join('');$('result-next').textContent=p.next==='free'?(state.completed.length===3?'去自由拼搭 →':'继续完成造物 →'):'去做下一件 →';$('result-dialog').showModal();sound('win');for(let i=0;i<5;i++)sparkle(300+i*100,220,16)}

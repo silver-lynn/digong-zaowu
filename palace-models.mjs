@@ -25,6 +25,9 @@ export const cylinder=(p,m,r,h,x=0,y=0,z=0,n=16)=>mesh(p,new T.CylinderGeometry(
 export function ring(p,m,r,t=.06,x=0,y=0,z=0){const o=mesh(p,new T.TorusGeometry(r,t,6,56),m,x,y,z);o.rotation.x=Math.PI/2;return o}
 export function beam(p,m,a,b,r=.05){const A=new T.Vector3(...a),B=new T.Vector3(...b),d=B.clone().sub(A);const o=mesh(p,new T.CylinderGeometry(r,r,d.length(),8),m);o.position.copy(A.add(B).multiplyScalar(.5));o.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),d.normalize());return o}
 export function gear(p,m,r=.6,y=0){const g=new T.Group();g.position.y=y;p.add(g);cylinder(g,m,r*.82,.13);ring(g,m,r*.48,.06);for(let i=0;i<12;i++){const a=i*Math.PI/6;const t=box(g,m,.2,.18,.2,Math.sin(a)*r,0,Math.cos(a)*r);t.rotation.y=a}return g}
+// Gears are built in the XZ plane. Spin around their local axle even after the
+// complete assembly has been turned upright or placed at an angle in a bay.
+export function spinWheel(wheel,angle){wheel.rotateY(angle)}
 
 // Fictional exhibition apparatus: stylized, non-parametric shapes only.
 export function createModule(index,m=materials()){
