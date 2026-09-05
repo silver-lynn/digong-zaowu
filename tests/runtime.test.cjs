@@ -17,7 +17,7 @@ function boot(saved){
  }
  function parse(s){return [...s.matchAll(/<([\w-]+)\b([^>]*)>/g)].map(m=>{const attrs=Object.fromEntries([...m[2].matchAll(/([\w-]+)="([^"]*)"/g)].map(a=>[a[1],a[2]]));return new Element(m[1],attrs)})}
  function matches(e,s){if(s==='dialog[open]')return e.tag==='dialog'&&e.open;if(s.startsWith('.'))return e.classes.has(s.slice(1));const a=s.match(/^\[([^\]]+)\]$/);return a?Object.hasOwn(e.attrs,a[1]):false}
- parse(fs.readFileSync('index.html','utf8'));if(saved)storage.set('tiangong-workshop-v1',JSON.stringify(saved));
+ parse(fs.readFileSync('workshop.html','utf8'));if(saved)storage.set('tiangong-workshop-v1',JSON.stringify(saved));
  const win={addEventListener:(k,f)=>(listeners[k]??=[]).push(f)};
  const doc={getElementById:id=>ids.get(id),querySelectorAll:s=>registry.filter(e=>matches(e,s)),querySelector:s=>registry.find(e=>matches(e,s)),createElement:t=>new Element(t),body:new Element('body'),addEventListener:win.addEventListener,hidden:false};
  const sandbox={window:win,document:doc,console,Math,Set,JSON,performance:{now:()=>1000},devicePixelRatio:1,localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},matchMedia:()=>({matches:false}),requestAnimationFrame:f=>frames.push(f),setTimeout:(f,ms)=>{timers.set(++timerId,{f,ms});return timerId},clearTimeout:id=>timers.delete(id)};vm.createContext(sandbox);vm.runInContext(fs.readFileSync('game-data.js','utf8'),sandbox);sandbox.Tiangong=win.Tiangong;vm.runInContext(fs.readFileSync('workshop.js','utf8'),sandbox);
