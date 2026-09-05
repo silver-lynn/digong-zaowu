@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="工科穿越指南——在古代条件下拆解、试错并重建通往火箭的关键科技。" />
+  <title>工科穿越指南｜我在古代造火箭</title>
+  <link rel="stylesheet" href="styles.css?v=5" />
+</head>
+<body>
+  <div class="paper-noise" aria-hidden="true"></div>
+  <header class="topbar">
+    <button class="brand" data-go="home" aria-label="返回首页">
+      <span class="brand-mark">工</span>
+      <span><b>工科穿越指南</b><small>ENGINEER ACROSS TIME</small></span>
+    </button>
+    <nav class="nav-links" aria-label="主要导航">
+      <button data-go="adventure">冒险模式</button>
+      <button data-go="tree">科技树</button>
+      <button data-scroll="selection">首发专题</button>
+    </nav>
+    <button class="header-cta" data-go="adventure">随机投放 <span>↗</span></button>
+  </header>
+
+  <main>
+    <section id="home-view" class="view active" aria-label="首页">
+      <div class="hero wrap">
+        <div class="hero-copy reveal">
+          <p class="eyebrow"><span>实验档案 001</span> · 从水轮开始重建工业</p>
+          <h1>如果穿越到古代，<br /><em>你真的造得出火箭吗？</em></h1>
+          <p class="hero-lead">先别急着背公式。选错木料、低估加工误差，或者忘了给轴承润滑——你的第一台机器可能转不过三圈。</p>
+          <div class="hero-actions">
+            <button class="btn primary" data-go="adventure">开始一次随机冒险 <span>→</span></button>
+            <button class="btn ghost" data-go="tree">展开通往火箭的科技树</button>
+          </div>
+          <div class="hero-proof" aria-label="产品特点">
+            <div><strong>10秒</strong><span>做出第一道诏令</span></div>
+            <div><strong>6类</strong><span>可解释失效原因</span></div>
+            <div><strong>∞</strong><span>无限重试与推演</span></div>
+          </div>
+        </div>
+
+        <div class="hero-object reveal delay-1" aria-label="水轮自动锻锤结构预览">
+          <div class="object-head">
+            <span>结构图谱 / 水轮自动锻锤</span>
+            <span class="status-dot">可深度拆解</span>
+          </div>
+          <div class="blueprint-stage model-stage">
+            <canvas id="hero-model-3d" class="engineering-canvas" aria-label="可旋转的水轮自动锻锤三维模型"></canvas>
+            <div class="model-part-index" aria-label="模型部件">
+              <button data-model="hero" data-part="wheel"><b>01</b> 水轮</button>
+              <button data-model="hero" data-part="shaft"><b>02</b> 主轴</button>
+              <button data-model="hero" data-part="cam"><b>03</b> 凸轮</button>
+              <button data-model="hero" data-part="hammer"><b>04</b> 锻锤</button>
+            </div>
+            <div class="model-camera-hint"><span>↔</span> 拖动旋转 · 滚轮缩放</div>
+            <label class="explode-control hero-explode"><span>组合</span><input id="hero-explode" type="range" min="0" max="100" value="0" /><span>爆炸拆解</span></label>
+          </div>
+          <div class="object-foot">
+            <span><i></i> 历史实证</span>
+            <span><i></i> 实时 WebGL 结构模型</span>
+            <button data-go="adventure">进入拆解实验 →</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="mode-band">
+        <div class="wrap mode-grid">
+          <article class="mode-card adventure-card reveal">
+            <div class="mode-number">MODE 01</div>
+            <div class="mode-icon compass-icon" aria-hidden="true">✣</div>
+            <div>
+              <p>随机朝代 · 帝王资源 · 有限寿命</p>
+              <h2>冒险模式</h2>
+              <p class="mode-desc">醒来就是当朝天子。每道诏令都以寿命结算；死得够快，才来得及把线索留给下一世。</p>
+              <button class="text-link" data-go="adventure">即刻登基 <span>→</span></button>
+            </div>
+          </article>
+          <article class="mode-card tree-card reveal delay-1">
+            <div class="mode-number">MODE 02</div>
+            <div class="mode-icon" aria-hidden="true">⌘</div>
+            <div>
+              <p>跨朝代 · 全依赖 · 深节点</p>
+              <h2>科技树模式</h2>
+              <p class="mode-desc">不是百科全书，而是一张“缺了谁都不行”的工程依赖图。沿着材料、动力与精密制造一路走到火箭。</p>
+              <button class="text-link" data-go="tree">展开完整路线 <span>→</span></button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="selection" class="selection wrap">
+        <div class="section-heading reveal">
+          <div><p class="eyebrow">FIRST DEEP DIVES / 首发深挖</p><h2>只选三个，但把每个都拆到底</h2></div>
+          <p>筛选标准：机械结构是否有趣、古代条件是否可能、失败是否清晰可见。其余节点留在科技树中，只做路线说明。</p>
+        </div>
+        <div class="candidate-grid">
+          <article class="candidate featured reveal">
+            <div class="candidate-visual water-wheel-mini" aria-hidden="true"><span></span><i></i></div>
+            <div class="candidate-meta"><span>首发样板</span><b>14 / 15</b></div>
+            <h3>水轮自动锻锤</h3>
+            <p>把自然水流转成可重复的工业动作。能同时讲清动力、凸轮、轴承、木材和金属疲劳。</p>
+            <div class="score-row"><span>机械趣味 5</span><span>古代可行 5</span><span>视觉传播 4</span></div>
+            <button class="btn small primary" data-go="adventure">进入样板实验</button>
+          </article>
+          <article class="candidate reveal delay-1">
+            <div class="candidate-visual lathe-mini" aria-hidden="true"><span></span><i></i></div>
+            <div class="candidate-meta"><span>第二专题</span><b>13 / 15</b></div>
+            <h3>从木车床到精密机床</h3>
+            <p>没有精度，就没有真正的工业复制。追踪导轨、丝杠、刀具和量具如何共同出现。</p>
+            <div class="score-row"><span>机械趣味 4</span><span>古代可行 4</span><span>视觉传播 5</span></div>
+            <button class="btn small ghost" data-show-machine="lathe">查看 3D 结构</button>
+          </article>
+          <article class="candidate reveal delay-2">
+            <div class="candidate-visual generator-mini" aria-hidden="true"><span></span><i></i></div>
+            <div class="candidate-meta"><span>第三专题</span><b>12 / 15</b></div>
+            <h3>手摇发电机</h3>
+            <p>从铜线、绝缘漆和磁铁开始，把“看不见的电”变成可以测量、传输和控制的力量。</p>
+            <div class="score-row"><span>机械趣味 4</span><span>古代可行 3</span><span>视觉传播 5</span></div>
+            <button class="btn small ghost" data-show-machine="generator">查看 3D 结构</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="model-library wrap" id="model-library">
+        <div class="section-heading reveal">
+          <div><p class="eyebrow">MECHANICAL CABINET / 百工模型库</p><h2>不只看一台机器，<br />看清四种能力如何接力</h2></div>
+          <p>每台模型都能拖动旋转、聚焦部件和爆炸拆解。模型不是装饰：它们分别对应动力转换、精密加工、电气控制与流体输送。</p>
+        </div>
+        <div class="machine-tabs" role="tablist" aria-label="选择三维机械模型">
+          <button class="active" role="tab" aria-selected="true" data-machine="hammer"><b>01</b><span>水轮锻锤<small>动力转换</small></span></button>
+          <button role="tab" aria-selected="false" data-machine="lathe"><b>02</b><span>脚踏车床<small>精密加工</small></span></button>
+          <button role="tab" aria-selected="false" data-machine="generator"><b>03</b><span>手摇发电机<small>电磁转换</small></span></button>
+          <button role="tab" aria-selected="false" data-machine="pump"><b>04</b><span>双缸活塞泵<small>流体输送</small></span></button>
+        </div>
+        <div class="model-lab">
+          <div class="gallery-stage model-stage">
+            <canvas id="model-gallery-3d" class="engineering-canvas" aria-label="可切换和拆解的三维机械模型"></canvas>
+            <div class="model-part-index gallery-parts" id="gallery-part-index" aria-label="模型部件"></div>
+            <div class="model-camera-hint"><span>↔</span> 拖动旋转 · 滚轮缩放</div>
+            <label class="explode-control gallery-explode"><span>组合</span><input id="gallery-explode" type="range" min="0" max="100" value="0" /><span>爆炸拆解</span></label>
+          </div>
+          <aside class="model-evidence">
+            <p class="model-code" id="gallery-code">MECH-010 · 汉代起</p>
+            <h3 id="gallery-title">水轮自动锻锤</h3>
+            <p id="gallery-summary">水流先推动水轮，再经主轴和凸轮，把连续旋转变成重锤的周期起落。</p>
+            <dl>
+              <div><dt>这一台教什么</dt><dd id="gallery-principle">能量转换与旋转—往复运动</dd></div>
+              <div><dt>最容易坏在哪里</dt><dd id="gallery-risk">木轴扭裂、轴承抱死、凸轮崩齿</dd></div>
+              <div><dt>通往火箭的下一步</dt><dd id="gallery-next">扩大冶炼与锻造能力</dd></div>
+            </dl>
+            <div class="model-chain" id="gallery-chain" aria-label="技术传递链"><span>水流</span><i>→</i><span>水轮</span><i>→</i><span>锻锤</span><i>→</i><span>冶金</span></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="failure-loop">
+        <div class="wrap loop-layout">
+          <div class="loop-copy reveal">
+            <p class="eyebrow light">LEARN BY BREAKING / 先弄坏再学会</p>
+            <h2>失败不是惩罚，<br />是机器在给你上课。</h2>
+            <p>每次失败都指向一个能继续行动的工程原因：材料、结构、工具、精度、时代资源或操作。没有“数值不够”，只有可以拆开的真实问题。</p>
+            <button class="btn paper" data-go="adventure">制造我的第一次事故</button>
+          </div>
+          <div class="failure-card reveal delay-1">
+            <div class="failure-card-top"><span>实验结案 № 0042</span><span>北宋 · 汴京</span></div>
+            <div class="crack-mark">裂</div>
+            <p class="failure-kicker">你成功发明了</p>
+            <h3>只能工作三圈的<br />大型木制暖手宝</h3>
+            <p>榆木轴在过大的偏载下发热变形，凸轮提前咬死。建议先降低配合间隙，或给轴颈增加青铜衬套。</p>
+            <div class="failure-stats"><span><b>03</b>转后停机</span><span><b>86℃</b>轴颈温度</span><span><b>+1</b>工程直觉</span></div>
+            <div class="share-line">#工科穿越失败档案　#我在古代造火箭</div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section id="adventure-view" class="view app-view" aria-label="冒险模式">
+      <div class="soul-shell" id="soul-shell">
+        <header class="soul-topbar">
+          <button class="back-btn soul-back" data-go="home">← 退出本世</button>
+          <div class="soul-title"><span>冒险模式</span><b>一世造物录</b></div>
+          <div class="cycle-mark">轮回 <b id="soul-cycle">壹</b></div>
+        </header>
+
+        <div class="soul-hud">
+          <div class="ruler-identity">
+            <span class="ruler-seal" id="ruler-seal">宋</span>
+            <div><small>你如今是</small><strong id="ruler-title">北宋当朝天子</strong><p id="ruler-age">十八岁即位 · 国库尚丰</p></div>
+          </div>
+          <div class="life-block">
+            <div class="life-copy"><span>预计余寿</span><b id="life-value">42 年</b></div>
+            <div class="life-track"><i id="life-bar" style="width:100%"></i><em id="life-spent"></em></div>
+            <small>每一道诏令、实验与等待都会消耗寿命</small>
+          </div>
+          <div class="imperial-stats">
+            <span>朝局信用 <b id="credit-value">70</b></span>
+            <span>已立科技 <b id="tech-value">0</b></span>
+          </div>
+        </div>
+
+        <div class="soul-layout">
+          <aside class="imperial-desk">
+            <p class="soul-kicker">御案 / IMPERIAL DESK</p>
+            <section class="desk-section">
+              <label>本世大愿</label>
+              <div id="goal-display" class="empty-slot">尚未立愿</div>
+            </section>
+            <section class="desk-section">
+              <label>随身与内库</label>
+              <div id="inventory-list" class="token-list"><span class="empty-token">空</span></div>
+            </section>
+            <section class="desk-section clue-section">
+              <label>已读纸条</label>
+              <div id="clue-list" class="clue-list"><p>尚无线索。死一次或许就有了。</p></div>
+            </section>
+            <button class="forget-button" id="forget-memory">焚毁前世纸条</button>
+          </aside>
+
+          <section class="choice-stage">
+            <div class="palace-shadow" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="previous-note hidden" id="previous-note">
+              <span>前世血书</span><p id="previous-note-copy"></p>
+            </div>
+            <div class="scene-label" id="scene-label">醒来 · 第零年</div>
+            <h1 id="scene-question">龙榻外跪满了人。<br />你第一句话说什么？</h1>
+            <p class="scene-copy" id="scene-copy">你记得现代科技，却没有说明书。你拥有这个时代最多的资源，也拥有最昂贵的每一次试错。</p>
+
+            <div class="found-object hidden" id="found-object">
+              <div class="object-glyph" id="object-glyph">札</div>
+              <div><span id="object-type">发现纸条</span><b id="object-name">前朝工匠的残页</b><p id="object-copy"></p></div>
+            </div>
+
+            <div class="soul-model-wrap hidden" id="soul-model-wrap">
+              <canvas id="soul-model-3d" class="engineering-canvas" aria-label="御作监中的三维机械模型"></canvas>
+              <div class="model-camera-hint"><span>↔</span> 拖动审视御作</div>
+            </div>
+
+            <div class="choice-list" id="choice-list" aria-live="polite"></div>
+            <div class="choice-rule"><span></span><p>没有完美选择。只有你愿意拿多少年寿命，去换一条尚未存在的工业链。</p><span></span></div>
+          </section>
+
+          <aside class="imperial-chronicle">
+            <div class="chronicle-head"><p class="soul-kicker">起居注 / RUN LOG</p><span id="decision-count">0 诏</span></div>
+            <ol id="chronicle-list"><li class="empty-entry">史官正在磨墨。</li></ol>
+          </aside>
+        </div>
+      </div>
+
+      <div class="soul-death hidden" id="soul-death" role="dialog" aria-modal="true" aria-labelledby="posthumous-title">
+        <div class="death-veil"></div>
+        <div class="death-content">
+          <p class="death-word" id="death-word">崩殂</p>
+          <p class="death-cause" id="death-cause">你死于过度自信。</p>
+          <div class="posthumous-scroll">
+            <span class="scroll-cap">架空谥册 · 本局结算</span>
+            <p>谥曰</p>
+            <h2 id="posthumous-title">工躁炀皇帝</h2>
+            <blockquote id="historian-comment">才胜于时，而耐心不及一炉铁水。</blockquote>
+            <div class="life-summary">
+              <span>在位 <b id="summary-years">2 年</b></span>
+              <span>颁诏 <b id="summary-decisions">1 道</b></span>
+              <span>留下科技 <b id="summary-tech">0 项</b></span>
+            </div>
+            <div class="legacy-box"><label>带往下一世的纸条</label><p id="legacy-clue">不要在第一次朝会上宣布造火箭。</p></div>
+          </div>
+          <div class="death-actions">
+            <button class="btn primary" id="reincarnate">带着纸条再来一世</button>
+            <button class="btn ghost" id="copy-epitaph">抄下谥号与批语</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-shell legacy-adventure">
+        <div class="app-topline">
+          <button class="back-btn" data-go="home">← 返回入口</button>
+          <div><span class="app-mode-label">冒险模式</span><strong>水力机构实验场</strong></div>
+          <button class="quiet-btn" id="reroll-top">重新投放 ↻</button>
+        </div>
+
+        <div class="adventure-layout">
+          <aside class="mission-panel">
+            <div class="mission-stamp">随机投放完成</div>
+            <p class="mission-id" id="mission-id">CASE 0001</p>
+            <div class="mission-location">
+              <span id="dynasty-seal">宋</span>
+              <div><small>你现在位于</small><h2 id="mission-place">北宋 · 汴京</h2></div>
+            </div>
+            <div class="mission-block">
+              <label>工程委托</label>
+              <p id="mission-task">让一柄重锤每天重复锻打铁坯，不再依靠十名工匠轮班。</p>
+            </div>
+            <div class="mission-block">
+              <label>当地条件</label>
+              <ul id="mission-resources">
+                <li>城外有一条流速稳定的河渠</li>
+                <li>可以雇到木匠与铁匠</li>
+                <li>青铜昂贵，铁料供应不稳</li>
+              </ul>
+            </div>
+            <div class="attempt-line"><span>本局尝试</span><b id="attempt-count">0 次</b></div>
+            <button class="btn full ghost" id="reroll">放弃这里，重新穿越</button>
+          </aside>
+
+          <section class="workbench">
+            <div class="workbench-head">
+              <div><p class="eyebrow">WORKBENCH / 工程台</p><h1>搭建你的往复动力机构</h1></div>
+              <div class="step-indicator"><span class="active">1 选材</span><i></i><span>2 试车</span><i></i><span>3 诊断</span></div>
+            </div>
+
+            <div class="machine-workspace">
+              <div class="machine-live" id="machine-live">
+                <canvas id="workbench-model-3d" class="engineering-canvas" aria-label="可交互的水力往复机构三维模型"></canvas>
+                <div class="workbench-model-controls">
+                  <div class="model-part-index compact" aria-label="选择模型部件">
+                    <button data-model="workbench" data-part="wheel">水轮</button>
+                    <button data-model="workbench" data-part="shaft">主轴</button>
+                    <button data-model="workbench" data-part="cam">凸轮</button>
+                    <button data-model="workbench" data-part="hammer">锻锤</button>
+                  </div>
+                  <button class="model-reset" id="model-reset">重置视角 ⟳</button>
+                </div>
+                <label class="explode-control workbench-explode"><span>组合</span><input id="workbench-explode" type="range" min="0" max="100" value="0" /><span>拆解</span></label>
+                <div class="model-camera-hint workbench-hint"><span>↔</span> 拖动查看结构</div>
+              </div>
+              <div class="machine-metrics">
+                <span>转速 <b id="metric-rpm">0 rpm</b></span>
+                <span>轴温 <b id="metric-heat">22℃</b></span>
+                <span>锤击 <b id="metric-hits">0 次</b></span>
+              </div>
+            </div>
+
+            <div class="controls-grid">
+              <label class="control-card">
+                <span><b>动力来源</b><small>决定持续输入的功率</small></span>
+                <select id="power-select">
+                  <option value="human">四人踩踏轮</option>
+                  <option value="water">河渠下射水轮</option>
+                  <option value="animal">牲畜转盘</option>
+                </select>
+              </label>
+              <label class="control-card">
+                <span><b>主轴材料</b><small>承受扭转和摩擦</small></span>
+                <select id="shaft-select">
+                  <option value="pine">松木整轴</option>
+                  <option value="elm">榆木轴＋油脂</option>
+                  <option value="bronze">榆木轴＋青铜衬套</option>
+                </select>
+              </label>
+              <label class="control-card">
+                <span><b>凸轮数量</b><small>决定锤击频率与冲击</small></span>
+                <select id="cam-select">
+                  <option value="6">六枚密集凸轮</option>
+                  <option value="3">三枚等距凸轮</option>
+                  <option value="1">单枚大凸轮</option>
+                </select>
+              </label>
+              <label class="control-card range-card">
+                <span><b>加工误差</b><small>轴与衬套的配合偏差</small></span>
+                <div><input id="tolerance" type="range" min="1" max="8" value="7" /><output id="tolerance-output">±7 mm</output></div>
+              </label>
+            </div>
+            <div class="test-row">
+              <p id="test-hint"><b>穿越者提醒：</b>别想太久。先试车，让机器告诉你哪里错了。</p>
+              <button class="btn primary test-btn" id="test-machine">立即试车 <span>→</span></button>
+            </div>
+          </section>
+
+          <aside class="diagnosis-panel" id="diagnosis-panel">
+            <div class="diagnosis-empty" id="diagnosis-empty">
+              <span>尚未试车</span>
+              <h3>故障诊断台</h3>
+              <p>第一次试车大概率会失败。这里会显示具体失效部位，而不是一句“制造失败”。</p>
+            </div>
+            <div class="diagnosis-result hidden" id="diagnosis-result">
+              <div class="diagnosis-badge" id="diagnosis-badge">试车失败</div>
+              <p class="diagnosis-time">运行记录 · <span id="run-time">00:08</span></p>
+              <h3 id="diagnosis-title">主轴抱死</h3>
+              <p id="diagnosis-copy">轴与轴承之间的配合误差过大，摩擦热使木轴迅速膨胀。</p>
+              <div class="reason-box">
+                <label>根本原因</label>
+                <strong id="diagnosis-reason">加工精度不足</strong>
+                <p id="diagnosis-fix">把误差控制在 ±2 mm 内，或者使用更稳定的青铜衬套。</p>
+              </div>
+              <div class="diagnosis-actions">
+                <button class="btn primary full" id="retry">调整后再试</button>
+                <button class="btn ghost full" id="make-share">生成失败分享卡</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="tree-view" class="view app-view tree-view" aria-label="科技树模式">
+      <div class="app-shell tree-shell">
+        <div class="app-topline">
+          <button class="back-btn" data-go="home">← 返回入口</button>
+          <div><span class="app-mode-label">科技树模式</span><strong>从木石到近地轨道</strong></div>
+          <div class="tree-progress"><span><i style="width:9%"></i></span><b>已深挖 3 / 35</b></div>
+        </div>
+        <div class="tree-toolbar">
+          <div class="tree-title"><p class="eyebrow">ROUTE TO ORBIT / 通往轨道</p><h1>缺了谁，都飞不起来</h1></div>
+          <div class="tree-tools">
+            <label class="search-box"><span>⌕</span><input id="tree-search" type="search" placeholder="搜索技术节点" /></label>
+            <div class="legend"><span><i class="real"></i>历史实证</span><span><i class="sim"></i>工程推演</span><span><i class="deep"></i>深度专题</span></div>
+          </div>
+        </div>
+        <div class="tree-main">
+          <div class="tree-canvas-wrap">
+            <div class="tree-canvas" id="tree-canvas" aria-label="通往火箭的技术依赖树"></div>
+          </div>
+          <aside class="node-inspector" id="node-inspector">
+            <div class="inspector-placeholder">
+              <span>TECH NODE</span>
+              <h2>选择一个节点</h2>
+              <p>查看它何时出现、依赖什么，以及为什么最终会影响火箭。</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="share-modal" role="dialog" aria-modal="true" aria-labelledby="share-title" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-card">
+      <button class="modal-close" data-close-modal aria-label="关闭">×</button>
+      <p class="eyebrow">FAILURE ARCHIVE / 失败档案</p>
+      <div class="share-card" id="share-card">
+        <div class="share-card-head"><span>工科穿越指南</span><span id="share-case">CASE 0001</span></div>
+        <div class="share-seal">败</div>
+        <p>我在古代成功发明了</p>
+        <h2 id="share-title">只能转三圈的<br />大型木制暖手宝</h2>
+        <div class="share-reason"><span>致命问题</span><b id="share-reason">加工精度不足</b></div>
+        <p id="share-copy">轴与轴承的配合误差让摩擦热快速上升，整台机器在第 3 圈抱死。</p>
+        <div class="share-footer"><span id="share-place">北宋 · 汴京</span><span>#我在古代造火箭</span></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn primary" id="copy-result">复制分享文案</button>
+        <button class="btn ghost" data-close-modal>继续重试</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">已复制分享文案</div>
+  <script src="model3d.js?v=5"></script>
+  <script src="adventure.js?v=2"></script>
+  <script src="app.js?v=6"></script>
+</body>
+</html>
