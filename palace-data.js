@@ -1,9 +1,9 @@
 (function(root){'use strict';
 const eras=[
- {id:'qin',name:'秦始皇',seal:'秦',year:-221,date:'公元前 221 年',tag:'从基础造起',summary:'标准与组织已经铺开。以青铜、漆木和工匠的双手，让未来获得第一副骨架。',start:[3,1,1,1,3,0,3]},
- {id:'zhou',name:'武则天',seal:'周',year:690,date:'公元 690 年',tag:'工艺与人才',summary:'成熟的工艺与文书让造物更从容，精密测量和连续动力仍等待你亲手攻克。',start:[4,2,2,2,4,1,4]},
- {id:'ming',name:'朱元璋',seal:'明',year:1368,date:'公元 1368 年',tag:'结构与制造',summary:'炉火、金属和组织让大部件更容易成形。最后的难题藏在精度、控制与协同之中。',start:[5,3,4,3,5,2,5]},
- {id:'qing',name:'慈禧',seal:'清',year:1861,date:'公元 1861 年',tag:'轻松起步',summary:'仪器与外来机器已经进入视野。把零散的能力连成体系，让最后的控制舱闭合。',start:[6,5,5,4,6,3,6]}
+ {id:'qin',name:'秦始皇',seal:'秦',portrait:'assets/rulers/qinshihuang.webp',year:-221,date:'公元前 221 年',tag:'从基础造起',summary:'标准与组织已经铺开。以青铜、漆木和工匠的双手，让未来获得第一副骨架。',start:[3,1,1,1,3,0,3]},
+ {id:'zhou',name:'武则天',seal:'周',portrait:'assets/rulers/wuzetian.webp',year:690,date:'公元 690 年',tag:'工艺与人才',summary:'成熟的工艺与文书让造物更从容，精密测量和连续动力仍等待你亲手攻克。',start:[4,2,2,2,4,1,4]},
+ {id:'ming',name:'朱元璋',seal:'明',portrait:'assets/rulers/zhuyuanzhang.webp',year:1368,date:'公元 1368 年',tag:'结构与制造',summary:'炉火、金属和组织让大部件更容易成形。最后的难题藏在精度、控制与协同之中。',start:[5,3,4,3,5,2,5]},
+ {id:'qing',name:'慈禧',seal:'清',portrait:'assets/rulers/cixi.webp',year:1861,date:'公元 1861 年',tag:'轻松起步',summary:'仪器与外来机器已经进入视野。把零散的能力连成体系，让最后的控制舱闭合。',start:[6,5,5,4,6,3,6]}
 ];
 const sources={
  bronze:{title:'大都会艺术博物馆 · 商周青铜工艺',url:'https://www.metmuseum.org/essays/shang-and-zhou-dynasties-the-bronze-age-of-china',note:'商周青铜器体现了早期金属加工与分范铸造的成熟传统。'},

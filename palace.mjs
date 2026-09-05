@@ -14,7 +14,7 @@ const bench=new CraftBench($('craft-3d'),{targets:$('craft-targets'),onProgress:
 
 function showEras(){
  $('era-screen').hidden=false;$('founding').hidden=true;$('game-hud').hidden=true;document.body.dataset.phase='choose';$('resume').hidden=!state;world?.applyState({era,phase:'founding',modules:{},upgrades:{},failures:0});
- $('era-cards').innerHTML=G.eras.map((e,i)=>`<button class="era-card ${i===era?'active':''}" data-era="${i}" aria-pressed="${i===era}"><span>${e.seal}</span><div><strong>${e.name}</strong><small>${e.date}</small></div><em>${e.tag}</em></button>`).join('');$('era-description').textContent=G.eras[era].summary;
+ $('era-cards').innerHTML=G.eras.map((e,i)=>`<button class="era-card ${i===era?'active':''}" data-era="${i}" aria-pressed="${i===era}"><span class="era-portrait"><img src="${e.portrait}" alt="" aria-hidden="true"><i>${e.seal}</i></span><div><strong>${e.name}</strong><small>${e.date}</small></div><em>${e.tag}</em></button>`).join('');$('era-description').textContent=G.eras[era].summary;
  $$('[data-era]').forEach(b=>b.onclick=()=>{era=+b.dataset.era;showEras()});
 }
 function enterNew(){state=G.fresh(era,state?.legacy||[]);save();showFounding()}

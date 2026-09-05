@@ -1,3 +1,6 @@
 dist/
 artifacts/
 *.tar.gz
+node_modules/
+.pnpm-store/
+.local-data/

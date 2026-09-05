@@ -1,12 +1,10 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),{spawnSync}=require('node:child_process');
-const files=['index.html','palace.css','palace-data.js','palace.mjs','palace-world.mjs','palace-models.mjs','palace-craft.mjs','workshop.html','workshop.css','art-v3.css','game-data.js','workshop.js','legacy.html','styles.css','app.js','adventure.js','model3d.js'];
-for(const f of ['game-data.js','workshop.js','palace-data.js']) new vm.Script(fs.readFileSync(f,'utf8'),{filename:f});
-for(const f of files.filter(f=>f.endsWith('.mjs'))){const r=spawnSync(process.execPath,['--check',f],{encoding:'utf8'});if(r.status!==0)throw new Error(r.stderr||'Module check failed: '+f)}
-const output=path.resolve(__dirname,'dist');if(path.dirname(output)!==__dirname||path.basename(output)!=='dist')throw new Error('Unsafe build target');if(fs.existsSync(output)&&fs.lstatSync(output).isSymbolicLink())throw new Error('Build target must not be a link');fs.rmSync(output,{recursive:true,force:true});
-fs.mkdirSync(output,{recursive:true});for(const f of files)fs.copyFileSync(f,path.join(output,f));
-fs.mkdirSync('dist/assets',{recursive:true});
-for(const name of ['courtyard-v2.webp','aqiao-v2.webp','props-v3.png'])fs.copyFileSync(path.join('assets',name),path.join('dist/assets',name));
-fs.mkdirSync('dist/assets/fonts',{recursive:true});
-for(const name of ['noto-serif-sc-display.ttf','palace-display.ttf','OFL.txt'])fs.copyFileSync(path.join('assets/fonts',name),path.join('dist/assets/fonts',name));
-fs.mkdirSync('dist/vendor/three',{recursive:true});for(const name of ['three.module.js','three.core.js','OrbitControls.js','LICENSE','package.json'])fs.copyFileSync(path.join('vendor/three',name),path.join('dist/vendor/three',name));
-console.log('Built complete palace and preserved workshop: '+files.length+' application files.');
+const files=['index.html','chronicle.css','era-stories.mjs','chronicle.mjs','chronicle-data.mjs','chronicle-world.mjs','chronicle-lab.mjs','lab-rules.mjs','atelier.mjs','atelier-data.mjs','atelier-models.mjs','work-stage.mjs','poster.mjs','archive-store.mjs','palace-v2.html','palace.css','palace-data.js','palace.mjs','palace-world.mjs','palace-models.mjs','palace-craft.mjs','workshop.html','workshop.css','art-v3.css','game-data.js','workshop.js','legacy.html','styles.css','app.js','adventure.js','model3d.js'];
+for(const f of ['game-data.js','workshop.js','palace-data.js'])new vm.Script(fs.readFileSync(f,'utf8'),{filename:f});
+for(const f of files.filter(f=>f.endsWith('.mjs'))){const r=spawnSync(process.execPath,['--check',f],{encoding:'utf8'});if(r.status!==0)throw new Error(r.stderr||f)}
+const output=path.resolve(__dirname,'dist');if(path.dirname(output)!==__dirname||path.basename(output)!=='dist'||fs.existsSync(output)&&fs.lstatSync(output).isSymbolicLink())throw Error('Unsafe build target');fs.rmSync(output,{recursive:true,force:true});
+const client=path.join(output,'client');fs.mkdirSync(client,{recursive:true});for(const f of files)fs.copyFileSync(f,path.join(client,f));
+for(const dir of ['assets','vendor'])fs.cpSync(dir,path.join(client,dir),{recursive:true,filter:p=>!p.endsWith('.md')&&!(p.includes('rulers')&&p.endsWith('.png'))&&path.basename(p)!=='throne-opening-v3.png'});
+fs.mkdirSync('dist/server',{recursive:true});const pure=['chronicle-data.mjs','atelier-data.mjs'].map(f=>fs.readFileSync(f,'utf8').replace(/^export /gm,'')).join('\n');const worker=fs.readFileSync('server.mjs','utf8').replace(/^import .*;\r?\n/gm,'');fs.writeFileSync('dist/server/index.js',require('esbuild').transformSync(pure+'\n'+worker,{format:'esm',target:'es2022',minify:true}).code);
+fs.mkdirSync('dist/.openai',{recursive:true});fs.copyFileSync('.openai/hosting.json','dist/.openai/hosting.json');fs.cpSync('drizzle','dist/.openai/drizzle',{recursive:true});
+console.log('Built the chronicle, 3D atelier, preserved games and account archive.');
