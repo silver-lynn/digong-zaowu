@@ -5,5 +5,5 @@ fs.mkdirSync('dist',{recursive:true});for(const f of files)fs.copyFileSync(f,pat
 fs.mkdirSync('dist/assets',{recursive:true});
 for(const name of ['courtyard-v2.webp','aqiao-v2.webp','props-v3.png'])fs.copyFileSync(path.join('assets',name),path.join('dist/assets',name));
 fs.mkdirSync('dist/assets/fonts',{recursive:true});
-for(const name of ['noto-serif-sc-display.woff2','OFL.txt'])fs.copyFileSync(path.join('assets/fonts',name),path.join('dist/assets/fonts',name));
+for(const name of ['noto-serif-sc-display.ttf','OFL.txt'])fs.copyFileSync(path.join('assets/fonts',name),path.join('dist/assets/fonts',name));
 console.log('Built static workshop: '+files.length+' files.');
