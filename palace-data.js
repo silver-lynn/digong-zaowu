@@ -62,7 +62,7 @@ const events=[
 const cap=(v,a,b)=>Math.max(a,Math.min(b,v));
 function fresh(era=0,legacy=[]){era=cap(Number.isInteger(era)?era:0,0,3);return {version:2,era,phase:'founding',months:0,limit:240,coins:150+era*30,crew:4+era*2,support:90,known:[],breakthroughs:[],reliability:{},modules:{},systems:{},upgrades:{},records:[],legacy:legacy.slice(-30),failures:0,attempts:0,spent:0,bonus:0,eventIndex:0,pendingEvent:null,finalReliability:0,ending:null,workshopClaims:[],seed:12031+era*971}}
 function record(s,type,title,text,target=null){s.records.push({month:s.months,type,title,text,target});if(s.records.length>250)s.records.shift()}
-function establish(s){if(s.phase!=='founding')return false;s.phase='playing';s.known=nodes.filter(n=>n.eraLevels[s.era]===2).map(n=>n.id);for(const id of s.known)s.reliability[id]=90;record(s,'founding','天工肇始','地下天工殿已经启封。工程纪年，自今日始。');return true}
+function establish(s){if(s.phase!=='founding')return false;s.phase='playing';s.known=nodes.filter(n=>n.eraLevels[s.era]===2).map(n=>n.id);for(const id of s.known)s.reliability[id]=90;record(s,'founding','造物肇始','地宫造物已经启封。工程纪年，自今日始。');return true}
 function available(s){return s.phase==='playing'||s.phase==='victory'}
 function status(s,id){if(s.known.includes(id))return s.breakthroughs.includes(id)?'breakthrough':'known';const n=nodeById[id];return n&&n.deps.every(d=>s.known.includes(d))?'ready':'blocked'}
 function missing(s,id){return (nodeById[id]?.deps||[]).filter(d=>!s.known.includes(d))}

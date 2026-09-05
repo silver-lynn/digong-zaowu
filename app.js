@@ -313,7 +313,7 @@ function openShare() {
 document.getElementById('make-share').addEventListener('click',openShare);
 document.querySelectorAll('[data-close-modal]').forEach(el=>el.addEventListener('click',()=>{const m=document.getElementById('share-modal');m.classList.remove('open');m.setAttribute('aria-hidden','true');}));
 document.getElementById('copy-result').addEventListener('click', async () => {
-  const text=`我在${currentMission.dynasty}成功发明了「${lastDiagnosis.share}」：${lastDiagnosis.copy} #工科穿越指南 #我在古代造火箭`;
+  const text=`我在${currentMission.dynasty}成功发明了「${lastDiagnosis.share}」：${lastDiagnosis.copy} #地宫造物 #我在古代造火箭`;
   try{await navigator.clipboard.writeText(text);}catch{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
   const toast=document.getElementById('toast');toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1600);
 });

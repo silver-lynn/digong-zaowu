@@ -224,7 +224,7 @@
   document.getElementById('reincarnate').addEventListener('click',()=>start(true));
   document.getElementById('forget-memory').addEventListener('click',()=>{meta.clues=[];saveMeta();renderDesk();renderNode();});
   document.getElementById('copy-epitaph').addEventListener('click',async()=>{
-    const text=`《工科穿越指南》本世谥号：${document.getElementById('posthumous-title').textContent}。史官批语：${document.getElementById('historian-comment').textContent}`;
+    const text=`《地宫造物》本世谥号：${document.getElementById('posthumous-title').textContent}。史官批语：${document.getElementById('historian-comment').textContent}`;
     try{await navigator.clipboard.writeText(text);}catch{}
     const toast=document.getElementById('toast');toast.textContent='已抄下谥号与批语';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1500);
   });

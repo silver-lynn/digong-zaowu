@@ -1,4 +1,4 @@
-/* 天工局 · 山野工坊：scene-first adventure interface */
+/* 地宫造物 · 山野工坊：scene-first adventure interface */
 @font-face{font-family:TiangongDisplay;src:url('assets/fonts/noto-serif-sc-display.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap}
 :root{--serif:TiangongDisplay,'Noto Serif SC','STZhongsong','SimSun',serif;--sans:'Segoe UI','Microsoft YaHei',sans-serif;--ink:#f6f3df;--paper:#1b3638;--muted:#c5caba;--line:#ece9c644;--green:#537c64;--red:#b27c42;--gold:#dfcca1;--hud:#142c31e0}
 html,body{height:100%;overflow:hidden}body{background:#1c3c3c url('assets/courtyard-v2.webp') center/cover fixed;font:14px/1.6 var(--sans);color:var(--ink)}body:before{content:'';position:fixed;inset:0;background:linear-gradient(180deg,#08252ccc,#122d3240 28%,#12313180 70%,#102830dd);pointer-events:none;z-index:0}button,a{color:inherit}button:focus-visible,a:focus-visible,svg g:focus-visible{outline:2px solid #fffce5;outline-offset:4px}button:active:not(:disabled){transform:translateY(1px)}

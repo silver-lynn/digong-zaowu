@@ -1,4 +1,4 @@
-/* 山岚造物 · 石青石绿与绢本金色 */
+/* 地宫造物 · 石青石绿与绢本金色 */
 :root{--paper:#ede3c8;--ink:#263e38;--muted:#75806c;--line:#c9ba8d;--green:#265d50;--red:#a94330;--gold:#cda55f;--silk:#f6edcf;--dai:#173e3e;--stone:#79a186}
 body{background-color:#e6dcc2;background-image:linear-gradient(180deg,#e4e8d663 0,#ede3c8ef 530px,#e8ddc1 1000px),url('assets/courtyard-v2.webp');background-position:center top;background-size:100% auto,100% auto;background-repeat:no-repeat;background-attachment:fixed;color:var(--ink)}
 .topbar{height:86px;background:linear-gradient(110deg,#153b3c,#24514b 60%,#163b3c);border-bottom:1px solid #d4b875;box-shadow:0 4px 16px #153e3525;color:#f3e7bc;padding:0 4.1%}

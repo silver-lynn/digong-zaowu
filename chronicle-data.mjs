@@ -9,7 +9,7 @@ export const SOURCES={
  paint:{name:'Painted Wood: History and Conservation',owner:'盖蒂保护研究所',url:'https://www.getty.edu/conservation/publications_resources/pdf_publications/pdf/paintedwood1.pdf',note:'动物胶曾广泛作为东亚绘画结合料。关卡是示意交互，不给出历史复原配方。'}
 };
 export const ERAS=[
- {id:'qin',name:'秦始皇',seal:'秦',image:'qinshihuang',place:'咸阳 · 秦宫艺术复原',years:[-221,-220,-219,-217,-215,-213,-212,-210],theme:'让天下工坊使用同一把尺',line:'六国量器俱至，诸工尺寸不一。此事，交给天工殿。',events:[
+ {id:'qin',name:'秦始皇',seal:'秦',image:'qinshihuang',place:'咸阳 · 秦宫艺术复原',years:[-221,-220,-219,-217,-215,-213,-212,-210],theme:'让天下工坊使用同一把尺',line:'六国量器俱至，诸工尺寸不一。此事，交给地宫。',events:[
   {at:0,title:'二十六年 · 度量归一',text:'统一度量衡的诏令抵达。来自不同地域的工匠带来各自的尺与量器。',source:'qin'},
   {at:3,title:'一套标记，许多双手',text:'架空工坊记录：三位工匠终于能照同一份样板交接，管事把旧量器陈列起来。',source:'qin',fiction:true},
   {at:7,title:'留给后来的人',text:'架空结局：工程样板与试验记录一同封存。留下的还有一套可以传授的做事办法。',source:'qin',fiction:true}]},
@@ -18,7 +18,7 @@ export const ERAS=[
   {at:3,title:'不署名的样件',text:'架空工坊事件：试艺样件先隐去姓名，待比较结果之后，再听每一位制作者解释方法。',source:'zhou',fiction:true},
   {at:7,title:'久视元年 · 金简之愿',text:'700年投金简的史事成为案上的小小拓影。祈愿留在铭文里，工艺成败仍由实验说明。',source:'gold'}]},
  {id:'ming',name:'朱元璋',seal:'明',image:'zhuyuanzhang',place:'应天 · 明初宫室艺术复原',years:[1368,1369,1371,1373,1375,1376,1378,1380],theme:'把造物变成可靠的制度',line:'百业待兴。旧料亦可成器，所用所成，须有实据。',events:[
-  {at:0,title:'洪武初年 · 百业待兴',text:'明初恢复生产的背景下，天工殿先从旧料分类和修复工具开始。地下工程为架空故事。',source:'ming'},
+  {at:0,title:'洪武初年 · 百业待兴',text:'明初恢复生产的背景下，地宫先从旧料分类和修复工具开始。地下工程为架空故事。',source:'ming'},
   {at:3,title:'旧料有来处',text:'架空工坊事件：管事把余料和成品放在同一张账册里，损耗终于有迹可查。',source:'ming',fiction:true},
   {at:7,title:'洪武十三年 · 文书改道',text:'1380年废丞相、撤中书省。工坊故事借此安排一次文书交接调整，具体任务为创作。',source:'ming'}]},
  {id:'qing',name:'慈禧',seal:'清',image:'cixi',place:'北京 · 养心殿垂帘意象',years:[1861,1862,1863,1865,1867,1868,1870,1872],theme:'让不同知识体系共同工作',line:'帘外呈来新图与旧样。先让能做的人，听懂彼此的话。',events:[
@@ -44,7 +44,7 @@ export const CHAPTERS=[
  {id:'drive',title:'让动作传过去',verb:'传动',person:'ji',summary:'同一只手，可以让小旗转得更快，也可以让提篮升得更稳。先选用途，再连接。',lesson:'理想传动中的转速与转矩存在取舍，实际装置还会损耗能量。',unlocks:['n20','n21','n22','n23'],modules:[3,4],toy:3},
  {id:'sequence',title:'让机关按时动作',verb:'编排',person:'ji',summary:'让门先打开，提台再升起，最后响铃。把你想要的顺序交给机关。',lesson:'顺序与联锁可以防止动作互相干涉；这里是民用机关演示。',unlocks:['n31'],modules:[5],toy:4},
  {id:'diagnose',title:'找出真正的问题',verb:'验证',person:'ce',summary:'小禾说，今天的接缝和昨天不一样。用一次有对照的实验，验证他的观察。',lesson:'木材受湿度变化影响会胀缩；试验应保持其余条件尽量一致。',unlocks:['n32'],modules:[6],toy:5},
- {id:'assembly',title:'让所有人一起完成',verb:'交接',person:'guan',summary:'样件、记录与人都已到齐。让负责人、协作者和复核者完成最后一次交接。',lesson:'地下天工殿与巡天器终局属于架空推演。基础实验不能直接实现现代导弹。',unlocks:['n33','final'],modules:[7],toy:6}
+ {id:'assembly',title:'让所有人一起完成',verb:'交接',person:'guan',summary:'样件、记录与人都已到齐。让负责人、协作者和复核者完成最后一次交接。',lesson:'地宫造物与巡天器终局属于架空推演。基础实验不能直接实现现代导弹。',unlocks:['n33','final'],modules:[7],toy:6}
 ];
 export const DECISIONS={
  2:{title:'师傅与年轻匠人',text:'陆衡觉得旧做法更稳，周鸣拿来一张新的样件记录。两个人都等着你发话。',options:[{id:'compare',label:'先做两份小样，按同一标准比较',result:'两人一起看完试样，决定保留牢固的接缝，也采用更清楚的记录。',trust:2},{id:'mentor',label:'请陆衡带周鸣完成这一件，再共同复核',result:'交付稍慢，但周鸣学会了看接缝，陆衡也留下了第一份复核记录。',trust:1}],source:null},

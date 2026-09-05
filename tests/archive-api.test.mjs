@@ -2,6 +2,39 @@ import test from 'node:test';import assert from 'node:assert/strict';import fs f
 import {api,accountIdentity} from '../server.mjs';import {recipe} from '../atelier-data.mjs';import {freshCampaign} from '../chronicle-data.mjs';import {ArchiveStore} from '../archive-store.mjs';
 function database(){const sql=new DatabaseSync(':memory:');for(const f of fs.readdirSync('drizzle').filter(f=>f.endsWith('.sql')))sql.exec(fs.readFileSync('drizzle/'+f,'utf8'));return {prepare(query){assert.equal(query.split(';').filter(s=>s.trim()).length,1);return {bind(...args){const s=sql.prepare(query);return {all:async()=>({results:s.all(...args)}),first:async()=>s.get(...args)||null}}}},close:()=>sql.close()}}
 function req(method,body,user='alice',extra={}){const headers={'Content-Type':'application/json',Origin:'https://workshop.example',...extra};if(user)headers['oai-authenticated-user-id']=user;return new Request('https://workshop.example/api/records',{method,headers,...(body?{body:JSON.stringify(body)}:{})})}
+test('public guest archives persist separately and cannot read or mutate account or other guest records',async()=>{
+ const db=database(),env={DB:db},origin='https://silver-lynn.github.io';
+ const headers={Origin:origin,'Sec-Fetch-Site':'cross-site','X-Digong-Guest':'a'.repeat(64)};
+ const other={...headers,'X-Digong-Guest':'b'.repeat(64)},value=recipe(0),key='work-public';
+ await api(req('PUT',{key,value,revision:0}),env);
+ const put=await api(req('PUT',{key,value:{...value,name:'访客作品'},revision:0},null,headers),env);
+ assert.equal(put.status,200);assert.equal(put.headers.get('Access-Control-Allow-Origin'),origin);
+ const saved=await (await api(req('GET',null,null,headers),env)).json();
+ assert.equal(saved.records[0].value.name,'访客作品');assert.ok(saved.scope.startsWith('guest:'));assert.ok(!saved.scope.includes('a'.repeat(64)));
+ assert.equal((await (await api(req('GET',null,null,other),env)).json()).records.length,0);
+ assert.equal((await api(req('DELETE',{key,revision:1},null,other),env)).status,409);
+ assert.equal((await (await api(req('GET'),env)).json()).records[0].value.name,value.name);
+ assert.equal((await api(req('GET',null,null,{...headers,'X-Digong-Guest':'short'}),env)).status,401);
+ // Cross-origin callers never borrow a platform identity, even if supplied on the request.
+ assert.equal(await accountIdentity(req('GET',null,'alice',headers)),saved.scope);
+ assert.equal((await api(req('DELETE',{key,revision:1},null,headers),env)).status,200);db.close();
+});
+test('CORS allows only the published game origin and required methods and headers',async()=>{
+ const origin='https://silver-lynn.github.io';
+ const request=(extra={})=>req('OPTIONS',null,null,{Origin:origin,'Access-Control-Request-Method':'PUT','Access-Control-Request-Headers':'content-type,x-digong-guest',...extra});
+ const r=await api(request(),{});assert.equal(r.status,204);assert.equal(r.headers.get('Access-Control-Allow-Origin'),origin);assert.equal(r.headers.get('Access-Control-Allow-Credentials'),null);
+ assert.equal((await api(request({Origin:'https://evil.example'}),{})).status,403);
+ assert.equal((await api(request({'Access-Control-Request-Method':'POST'}),{})).status,403);
+ assert.equal((await api(request({'Access-Control-Request-Headers':'oai-authenticated-user-id'}),{})).status,403);
+ const failure=await api(req('GET',null,null,{Origin:origin,'X-Digong-Guest':'c'.repeat(64)}),{});assert.equal(failure.status,503);assert.equal(failure.headers.get('Access-Control-Allow-Origin'),origin);
+});
+test('changing identity with pending drafts keeps a backup and blocks writes to the new owner',async()=>{
+ const oldFetch=globalThis.fetch,oldStorage=globalThis.localStorage,values=new Map(),w=recipe(0);
+ values.set('tiangong-v3-pending',JSON.stringify({scope:'id:alice',pending:{'work-old':{revision:1,value:w}}}));
+ globalThis.localStorage={getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v)};
+ const calls=[];globalThis.fetch=async(url,options)=>{calls.push(options.method||'GET');return Response.json({scope:'id:bob',records:[]})};
+ try{const store=new ArchiveStore();assert.equal(await store.init(),false);assert.equal(store.scope,'id:alice');assert.equal(store.get('work-old').name,w.name);assert.equal(await store.save('work-old',{...w,name:'保留草稿'}),false);assert.deepEqual(calls,['GET']);assert.equal(JSON.parse(values.get('tiangong-v3-pending')).scope,'id:alice')}finally{globalThis.fetch=oldFetch;globalThis.localStorage=oldStorage}
+});
 test('verified platform email-only sessions have private stable archives without storing raw email',async()=>{const db=database(),env={DB:db},headers={'oai-authenticated-user-email':'Alice@example.com'},body={key:'work-compatibility',value:recipe(0),revision:0};assert.equal((await api(req('PUT',body,null,headers),env)).status,200);const data=await (await api(req('GET',null,null,{'oai-authenticated-user-email':'alice@example.com'}),env)).json();assert.equal(data.records.length,1);assert.ok(data.scope.startsWith('email:'));assert.ok(!data.scope.includes('@'));const other=await (await api(req('GET',null,null,{'oai-authenticated-user-email':'bob@example.com'}),env)).json();assert.equal(other.records.length,0);assert.equal(await accountIdentity(req('GET',null,'stable-id',headers)),'id:stable-id');assert.equal((await api(req('GET',null,null),env)).status,401);db.close()});
 test('account archives persist records, enforce ownership and reject stale writes',async()=>{const db=database(),env={DB:db},key='work-test',value=recipe(0);let r=await api(req('PUT',{key,value,revision:0}),env);assert.equal(r.status,200);assert.equal((await r.json()).revision,1);assert.equal((await (await api(req('GET'),env)).json()).records.length,1);assert.equal((await (await api(req('GET',null,'bob'),env)).json()).records.length,0);assert.equal((await api(req('DELETE',{key,revision:1},'bob'),env)).status,409);assert.equal((await api(req('PUT',{key,value,revision:0}),env)).status,409);assert.equal((await api(req('PUT',{key,value:{...value,name:'重做'},revision:1}),env)).status,200);assert.equal((await api(req('DELETE',{key,revision:1}),env)).status,409);assert.equal((await api(req('DELETE',{key,revision:2}),env)).status,200);db.close()});
 test('archive API rejects anonymous, cross-origin, oversized and malformed records',async()=>{const db=database(),env={DB:db};assert.equal((await api(req('GET',null,null),env)).status,401);assert.equal((await api(req('PUT',{},'alice',{Origin:'https://elsewhere.example'}),env)).status,403);assert.equal((await api(req('PUT',{key:'campaign-3',revision:0,value:freshCampaign(0)}),env)).status,400);assert.equal((await api(req('PUT',{key:'work-test',revision:0,value:{version:3,nodes:'wrong'}}),env)).status,400);assert.equal((await api(req('PUT',{key:'work-large',revision:0,value:{data:'x'.repeat(70000)}}),env)).status,413);assert.equal((await api(req('GET'),{})).status,503);db.close()});
