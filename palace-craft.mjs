@@ -1,5 +1,5 @@
-import * as T from './vendor/three/three.module.js?v=dbeb0ef5889a';
-import {materials,THEMES,createModule,ring,box} from './palace-models.mjs?v=dbeb0ef5889a';
+import * as T from './vendor/three/three.module.js?v=93a4b08e4f6d';
+import {materials,THEMES,createModule,ring,box} from './palace-models.mjs?v=93a4b08e4f6d';
 
 function lighting(scene){scene.add(new T.HemisphereLight(0xe5f3d8,0x17303b,2.5));const a=new T.DirectionalLight(0xffd6a3,4);a.position.set(-4,8,8);scene.add(a);const b=new T.DirectionalLight(0x89d9dd,2);b.position.set(6,5,-5);scene.add(b)}
 function centeredModel(id,mat){const model=id==='final'?new T.Group():createModule(id,mat);if(id==='final')for(let i=0;i<8;i++)model.add(createModule(i,mat));const bounds=new T.Box3().setFromObject(model),center=bounds.getCenter(new T.Vector3()),size=bounds.getSize(new T.Vector3());model.position.sub(center);const holder=new T.Group();holder.add(model);holder.scale.setScalar(3.8/Math.max(size.x,size.y,size.z));return {holder,model}}
