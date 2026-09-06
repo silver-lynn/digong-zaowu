@@ -1,4 +1,4 @@
-import {API_ORIGIN} from './runtime-config.mjs?v=ff30ba60c3e4';
+import {API_ORIGIN} from './runtime-config.mjs?v=8e433e6a8218';
 
 const IDENTITY_KEY='digong-zaowu-guest-v1';
 let sessionToken;

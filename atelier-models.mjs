@@ -1,5 +1,5 @@
-import * as T from './vendor/three/three.module.js?v=ff30ba60c3e4';
-import {box,cylinder,ring,beam,mesh,materials} from './palace-models.mjs?v=ff30ba60c3e4';
+import * as T from './vendor/three/three.module.js?v=8e433e6a8218';
+import {box,cylinder,ring,beam,mesh,materials} from './palace-models.mjs?v=8e433e6a8218';
 export function makePart(type,m=materials(),color='#4f8877'){
  const g=new T.Group(),paint=m.jade.clone();paint.color.set(color);g.userData.paint=paint;const rotor=new T.Group();g.add(rotor);g.userData.rotor=rotor;g.userData.axis=type==='lantern'?'y':'z';
  const hub=(r=.18,l=.34)=>{const o=cylinder(rotor,m.metal,r,l);o.rotation.x=Math.PI/2;return o};
