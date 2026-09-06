@@ -1,4 +1,4 @@
-import * as T from './vendor/three/three.module.js?v=8e433e6a8218';
+import * as T from './vendor/three/three.module.js?v=433f66e85192';
 
 export const THEMES = [
  {stone:0x263e40,wood:0x704b2c,metal:0x9d8250,jade:0x507b69,light:0xffcf83},
