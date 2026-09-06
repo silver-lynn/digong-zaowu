@@ -1,4 +1,4 @@
-import {archiveRequest} from './archive-request.mjs';
+import {archiveRequest} from './archive-request.mjs?v=110b4a9c1695';
 const CACHE='tiangong-v3-pending';
 export const readLocal=(key)=>{try{return JSON.parse(localStorage.getItem(key)||'null')}catch{return null}};
 export class ArchiveStore{
