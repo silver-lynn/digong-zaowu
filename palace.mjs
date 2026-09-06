@@ -1,5 +1,5 @@
-import {PalaceWorld} from './palace-world.mjs?v=93a4b08e4f6d';
-import {CraftBench,PropPortraits} from './palace-craft.mjs?v=93a4b08e4f6d';
+import {PalaceWorld} from './palace-world.mjs?v=89446462b7ba';
+import {CraftBench,PropPortraits} from './palace-craft.mjs?v=89446462b7ba';
 const G=window.PalaceGame,$=id=>document.getElementById(id),$$=s=>[...document.querySelectorAll(s)],KEY='tiangong-palace-v2',PREF='tiangong-palace-preferences';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
