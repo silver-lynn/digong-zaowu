@@ -1,4 +1,4 @@
-import * as T from './vendor/three/three.module.js?v=5061f3da916d';
+import * as T from './vendor/three/three.module.js?v=ff30ba60c3e4';
 export const PART_GROUPS=['定位环','支撑骨架','外壳片','表面饰片','连接构件','序号标记','检查盖片','总装构件'];
 export const PARTS_PER_GROUP=24,TOTAL_PARTS=192;
 export function buildAtlasParts(){

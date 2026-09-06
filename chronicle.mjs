@@ -1,16 +1,16 @@
-import {GameAudio} from './game-audio.mjs?v=5061f3da916d';
-import {RocketAtlas,PART_GROUPS,TOTAL_PARTS} from './rocket-atlas.mjs?v=5061f3da916d';
-import {DIFFICULTIES,ENDINGS,chibi} from './story-revision.mjs?v=5061f3da916d';
-import {ERAS,CHAPTERS,NODES,SOURCES,freshCampaign,sanitizeCampaign,legacyCampaign,completeChapter,dateLabel,eventFor} from './chronicle-data.mjs?v=5061f3da916d';
-import {ChronicleWorld} from './chronicle-world.mjs?v=5061f3da916d';
-import {ChronicleLab} from './chronicle-lab.mjs?v=5061f3da916d';
-import {ArchiveStore,readLocal} from './archive-store.mjs?v=5061f3da916d';
-import {Atelier} from './atelier.mjs?v=5061f3da916d';
-import {recipe,uid,sanitizeWork,duplicateWork} from './atelier-data.mjs?v=5061f3da916d';
-import {downloadFile,makePoster} from './poster.mjs?v=5061f3da916d';
+import {GameAudio} from './game-audio.mjs?v=ff30ba60c3e4';
+import {RocketAtlas,PART_GROUPS,TOTAL_PARTS} from './rocket-atlas.mjs?v=ff30ba60c3e4';
+import {DIFFICULTIES,ENDINGS,chibi} from './story-revision.mjs?v=ff30ba60c3e4';
+import {ERAS,CHAPTERS,NODES,SOURCES,freshCampaign,sanitizeCampaign,legacyCampaign,completeChapter,dateLabel,eventFor} from './chronicle-data.mjs?v=ff30ba60c3e4';
+import {ChronicleWorld} from './chronicle-world.mjs?v=ff30ba60c3e4';
+import {ChronicleLab} from './chronicle-lab.mjs?v=ff30ba60c3e4';
+import {ArchiveStore,readLocal} from './archive-store.mjs?v=ff30ba60c3e4';
+import {Atelier} from './atelier.mjs?v=ff30ba60c3e4';
+import {recipe,uid,sanitizeWork,duplicateWork} from './atelier-data.mjs?v=ff30ba60c3e4';
+import {downloadFile,makePoster} from './poster.mjs?v=ff30ba60c3e4';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const audio=new GameAudio();
-let atlas,endingStep=0;
+let atlas,endingStep=0,endingEra=0;
 let s=freshCampaign(),selectedEra=0,world,lab,atelier,currentWorkKey=null,page=0,view='story',draftTimer,toastTimer,posterUrl;
 const prefs=readLocal('tiangong-v3-prefs')||{};
 const store=new ArchiveStore(text=>{$('sync-state').textContent=text;$('toy-save-status').textContent=text});
@@ -34,8 +34,8 @@ async function enter(resume=false){audio.unlock();audio.scene='hall';await ready
 function startChapter(){if(s.chapter>=8){ending();return}openLab()}
 function openLab(){if(lab)return;audio.scene='lab';const chapter={...CHAPTERS[s.chapter],era:s.era,level:1,sound:kind=>audio.play(kind)};lab=new ChronicleLab(chapter,result=>{if(!completeChapter(s,result))return;closeLab();save();atlas?.setFilter(-1);atlas?.explode(1);$('explode-slider').value=100;$('explode-value').textContent='100%';toast('一整批 24 件零件已点亮。');if(s.chapter===8){ending();return}showDrawer(`<p class="eyebrow">第 ${s.chapter} 批 · 24 件零件点亮</p>${chibi(s.era,2)}<h2>${PART_GROUPS[s.chapter-1]}，已就绪。</h2><p>${esc(result.note)}</p><p>累计 ${s.chapter*24} / 192 件。回到拆解图，可以点选这一批零件。</p><div class="actions"><button class="primary" id="next-story">看本批零件 →</button><button id="reward-toy">去自由造物</button></div>`);$('next-story').onclick=()=>{$('drawer').close();atlas?.setFilter(s.chapter-1);renderParts()};$('reward-toy').onclick=()=>{$('drawer').close();openAtelier(recipe(chapter.toy))}});suspend()}
 function closeLab(){lab?.dispose();lab=null;suspend()}
-function ending(){audio.scene='ending';audio.play('success');endingStep=0;renderEnding()}
-function renderEnding(){const e=ENDINGS[s.era],beat=e.beats[endingStep];showDrawer(`<article class="ending-card"><p class="eyebrow">架空结局 · ${ERAS[s.era].name} · ${dateLabel(e.year)}</p><h2>${e.title}</h2><div class="ending-reaction">${chibi(s.era,beat[1])}</div><p class="ending-prose" key="${endingStep}">${beat[0]}</p><p class="hint">${endingStep+1} / ${e.beats.length} · 导弹改变命运的情节为虚构</p><div class="actions"><button id="ending-back" ${endingStep===0?'disabled':''}>上一段</button>${endingStep<e.beats.length-1?'<button id="ending-next" class="primary">继续读 →</button>':'<button id="ending-toy" class="primary">留下自己的作品</button><button id="ending-era">另一个时代</button>'}</div><details><summary>真实历史中的这一刻</summary><p>${e.history}</p><a href="${SOURCES[e.source].url}" target="_blank" rel="noopener noreferrer">${SOURCES[e.source].owner} · 史料出处 ↗</a></details></article>`);$('ending-back').onclick=()=>{if(endingStep>0){endingStep--;renderEnding()}};if($('ending-next'))$('ending-next').onclick=()=>{endingStep++;renderEnding()};if($('ending-toy'))$('ending-toy').onclick=()=>{$('drawer').close();openAtelier(recipe(6))};if($('ending-era'))$('ending-era').onclick=()=>{$('drawer').close();showOpening()}}
+function ending(){endingEra=s.era;audio.scene='ending';audio.play('success');endingStep=0;renderEnding()}
+function renderEnding(){const e=ENDINGS[endingEra],beat=e.beats[endingStep];showDrawer(`<article class="ending-card"><p class="eyebrow">架空结局 · ${ERAS[endingEra].name} · ${dateLabel(e.year)}</p><h2>${e.title}</h2><div class="ending-reaction">${chibi(endingEra,beat[1])}</div><p class="ending-prose" key="${endingStep}">${beat[0]}</p><p class="hint">${endingStep+1} / ${e.beats.length} · 导弹改变命运的情节为虚构</p><div class="actions"><button id="ending-back" ${endingStep===0?'disabled':''}>上一段</button>${endingStep<e.beats.length-1?'<button id="ending-next" class="primary">继续读 →</button>':'<button id="ending-toy" class="primary">留下自己的作品</button><button id="ending-era">另一个时代</button>'}</div>${endingStep===e.beats.length-1&&s.chapter>=8?`<section class="ending-library"><p class="eyebrow">一卷通关 · 四种命运</p><h3>直接查看其他人物结局</h3><p class="hint">无需重新制作，不改变你的故事进度。</p><div class="actions">${ERAS.map((era,i)=>i===endingEra?'':`<button data-ending-view="${i}">${chibi(i,3)}<span>${era.name}<small>阅读专属结局 →</small></span></button>`).join('')}</div></section>`:''}<details><summary>真实历史中的这一刻</summary><p>${e.history}</p><a href="${SOURCES[e.source].url}" target="_blank" rel="noopener noreferrer">${SOURCES[e.source].owner} · 史料出处 ↗</a></details></article>`);$('ending-back').onclick=()=>{if(endingStep>0){endingStep--;renderEnding()}};if($('ending-next'))$('ending-next').onclick=()=>{endingStep++;renderEnding()};if($('ending-toy'))$('ending-toy').onclick=()=>{$('drawer').close();openAtelier(recipe(6))};if($('ending-era'))$('ending-era').onclick=()=>{$('drawer').close();showOpening()};$('drawer-body').querySelectorAll('[data-ending-view]').forEach(b=>b.onclick=()=>{if(s.chapter<8)return;endingEra=Number(b.dataset.endingView);endingStep=0;audio.play('tick');renderEnding()})}
 function showHistory(){const ev=eventFor(s),src=SOURCES[ev.source];showDrawer(`<p class="eyebrow">历史大事件 · ${dateLabel(ev.year)}</p>${chibi(s.era,ev.mood)}<h2>${ev.title}</h2><p>${ev.text}</p><a href="${src.url}" target="_blank" rel="noopener noreferrer">${src.owner} · ${src.name} ↗</a>`)}
 
 function ensureAtelier(){if(atelier)return true;try{const draft=sanitizeWork(store.get('draft'))||recipe(0);atelier=new Atelier(draft,w=>{store.save('draft',structuredClone(w))},saveWork,txt=>showNote('造物间手记',txt));atelier.onNew=()=>currentWorkKey=null;return true}catch(e){toast('这台设备暂时无法开启三维工作台。故事中的文字操作仍然可用。');return false}}

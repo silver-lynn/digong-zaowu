@@ -1,7 +1,7 @@
-import * as T from './vendor/three/three.module.js?v=5061f3da916d';
-import {PalaceWorld} from './palace-world.mjs?v=5061f3da916d';
-import {box,materials} from './palace-models.mjs?v=5061f3da916d';
-import {makeWork,disposeGroup} from './atelier-models.mjs?v=5061f3da916d';
+import * as T from './vendor/three/three.module.js?v=ff30ba60c3e4';
+import {PalaceWorld} from './palace-world.mjs?v=ff30ba60c3e4';
+import {box,materials} from './palace-models.mjs?v=ff30ba60c3e4';
+import {makeWork,disposeGroup} from './atelier-models.mjs?v=ff30ba60c3e4';
 export class ChronicleWorld extends PalaceWorld{
  constructor(canvas,onPick){super(canvas,onPick);this.showThrone();this.exhibits=new T.Group();this.scene.add(this.exhibits)}
  showThrone(era=0){this.state=null;if(this.era!==era)this.rebuild(era);this.opening=true;this.cameraMove=null;this.controls.enabled=false;this.camera.position.set(0,20,8);this.controls.target.set(0,4,-2)}
