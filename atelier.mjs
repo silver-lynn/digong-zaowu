@@ -1,5 +1,5 @@
-import {WorkStage} from './work-stage.mjs?v=89446462b7ba';
-import {PARTS,RECIPES,recipe,partInfo,uid,snapPart,connect} from './atelier-data.mjs?v=89446462b7ba';
+import {WorkStage} from './work-stage.mjs?v=9a3955b709d6';
+import {PARTS,RECIPES,recipe,partInfo,uid,snapPart,connect} from './atelier-data.mjs?v=9a3955b709d6';
 const $=id=>document.getElementById(id);
 export class Atelier{
  constructor(work,onChange,onSave,onExplain){this.onChange=onChange;this.onSave=onSave;this.onExplain=onExplain;this.history=[];this.work=structuredClone(work||recipe(0));this.stage=new WorkStage($('atelier-canvas'));this.selected=null;this.previous=null;this.abort=new AbortController();this.render();this.bind();this.stage.setWork(this.work);this.onChange(this.work)}
