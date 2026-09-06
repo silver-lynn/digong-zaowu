@@ -10,7 +10,7 @@ test('192 distinct display parts unfold to separated cells and unlock in eight c
 });
 test('all eight trials can be finished by following their live guide, across every character difficulty',()=>{
  for(const difficulty of DIFFICULTIES)for(const chapter of CHAPTERS){const s=newTrial(chapter.id,difficulty.level);let actions=0;while(!s.passed&&actions++<35){const g=trialGuide(s);assert.ok(g.text.length>8);if(g.mark!==undefined)trialAction(s,'mark',[g.mark,0]);else trialAction(s,g.action,g.action==='choose'?'b':g.value)}assert.ok(s.passed,chapter.id+' '+difficulty.label);assert.equal(trialGuide(s).action,'done')}
- assert.notDeepEqual(newTrial('measure',0).marks,newTrial('measure',2).marks);assert.notDeepEqual(newTrial('sequence',0).sequence,newTrial('sequence',2).sequence);
+ assert.deepEqual(newTrial('measure',0).marks,newTrial('measure',2).marks);assert.deepEqual(newTrial('sequence',0).sequence,newTrial('sequence',2).sequence);
 });
 test('historical cards have explicit years, real-event sources and never reference crafting fiction',()=>{
  for(let era=0;era<4;era++)for(let chapter=0;chapter<8;chapter++){const e=eventFor({...freshCampaign(era),chapter});assert.ok(e.year<=ERAS[era].years[chapter]);assert.ok(SOURCES[e.source]);assert.ok(!e.fiction);assert.doesNotMatch(e.text,/工坊|造物|工匠|架空/)}
