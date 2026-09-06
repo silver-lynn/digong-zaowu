@@ -1,6 +1,6 @@
-import * as T from './vendor/three/three.module.js?v=110b4a9c1695';
-import {OrbitControls} from './vendor/three/OrbitControls.js?v=110b4a9c1695';
-import {THEMES,materials,createHall,createModule,mesh,ring,spinWheel} from './palace-models.mjs?v=110b4a9c1695';
+import * as T from './vendor/three/three.module.js?v=5061f3da916d';
+import {OrbitControls} from './vendor/three/OrbitControls.js?v=5061f3da916d';
+import {THEMES,materials,createHall,createModule,mesh,ring,spinWheel} from './palace-models.mjs?v=5061f3da916d';
 
 export class PalaceWorld{
  label(text,color='#d4c99c'){const canvas=document.createElement('canvas');canvas.width=512;canvas.height=128;const c=canvas.getContext('2d');c.strokeStyle=color;c.fillStyle=color;c.lineWidth=2;c.strokeRect(16,12,480,102);c.font='700 40px SimSun';c.textAlign='center';c.textBaseline='middle';c.fillText(text,256,64);const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;return new T.Mesh(new T.PlaneGeometry(2.1,.525),new T.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false}))}

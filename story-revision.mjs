@@ -1,9 +1,4 @@
-export const DIFFICULTIES=[
- {label:'适中 · 从零摸索',level:2,detail:'完整实验；按需展开提示。零刻度需要自己找准，机关顺序需要自己调整。'},
- {label:'轻松 · 有迹可循',level:1,detail:'默认显示下一步提示；零刻度附带数值，装配方向有明确提醒。'},
- {label:'适中 · 动手验证',level:2,detail:'完整实验；按需查看引导。先观察样品，再根据结果选材料。'},
- {label:'入门 · 步步引导',level:0,detail:'默认展开引导；一把尺预先对齐，机关已有一步排好。其余操作仍由你完成。'}
-];
+export const DIFFICULTIES=Array.from({length:4},()=>({label:'轻松 · 步步引导',level:1,detail:'八段相同的动手体验，全程有提示、无倒计时。人物只影响故事表情与专属结局。'}));
 export const HISTORICAL_EVENTS=[
  [
   {at:0,year:-221,title:'秦王政称皇帝',text:'秦完成统一，秦王政采用“皇帝”称号。此后，统一度量衡等举措推行于各地。',source:'qin',mood:6},

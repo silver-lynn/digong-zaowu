@@ -44,14 +44,14 @@ export const PEOPLE=[
  {id:'guan',name:'方叔',job:'管事',skill:'清楚地交接人与物',text:'先说清楚谁接手，再把东西搬过去。',color:'#b7a18a'},
  {id:'xue',name:'小禾',job:'学徒',skill:'敏锐地发现异常',text:'正在学，也在认真看。',color:'#ccd9ad'}
 ];
-const lanes=[['木作',['识材','榫卯','加固','承载成果']],['材料',['研磨','拌合','试涂','表面成果']],['动力',['轮轴','传动','省力','机巧成果']],['验证',['共同尺度','动作次序','复核','总装检查']]];
+const lanes=[['木作',['识材','弧壳','扣合','外形完成']],['材料',['观察','聚光','凝芯','架空燃料芯']],['动力',['轮轴','传动','省力','机巧成果']],['验证',['共同尺度','动作次序','复核','总装检查']]];
 export const NODES=lanes.flatMap(([branch,names],b)=>names.map((name,r)=>({id:`n${b}${r}`,name,branch:b,rank:r,deps:r?[`n${b}${r-1}`]:[],lane:branch}))).concat([{id:'final',name:'巡天总成',branch:4,rank:4,deps:['n03','n13','n23','n33'],lane:'总装'}]);
 export const CHAPTERS=[
  {id:'measure',title:'一把不准的尺',verb:'比对',person:'ce',summary:'三份样件都写着“合式”，却拼不到一起。找出可以共同使用的标准。',lesson:'尺寸比较必须使用同一基准；观察方法改变结论。',unlocks:['n30'],modules:[0],toy:0},
  {id:'material',title:'材料会说话',verb:'试样',person:'liao',summary:'轻巧、易弯与结实，并不是同一回事。给一件提篮选择合适的材料。',lesson:'选材取决于用途。以下样品结果只代表本次样品，不是所有木材的固定属性。',unlocks:['n00','n10'],modules:[1],toy:0},
- {id:'join',title:'把结构立起来',verb:'拼合',person:'mu',summary:'先让底座站稳，再让接缝贴合。旋转实体榫头，把框架一处处立起来。',lesson:'有依赖的装配先后顺序由结构决定；同层的两根立柱可以交换。',unlocks:['n01','n02','n03'],modules:[2],toy:1},
- {id:'mix',title:'调出一份好材料',verb:'拌合',person:'liao',summary:'让颗粒分散、让结合料发挥作用。试涂之后，决定把什么颜色留在作品上。',lesson:'颜料分散、结合料成膜与干燥要区分；过程经过时间压缩，不是古代配方复原。',source:'binder',unlocks:['n11','n12','n13'],modules:[3],toy:2},
- {id:'drive',title:'让动作传过去',verb:'传动',person:'ji',summary:'同一只手，可以让小旗转得更快，也可以让提篮升得更稳。先选用途，再连接。',lesson:'理想传动中的转速与转矩存在取舍，实际装置还会损耗能量。',unlocks:['n20','n21','n22','n23'],modules:[4],toy:3},
+ {id:'join',title:'让弧壳合为一体',verb:'拼合',person:'mu',summary:'放好定位展示环，贴合两片弧形外壳，再扣上外饰环。每一步只需完成眼前的操作。',lesson:'弧面围合形成外壳；本环节是外观拼合玩具，不代表飞行器的实际结构或装配工艺。',unlocks:['n01','n02','n03'],modules:[2],toy:1},
+ {id:'mix',title:'凝成一枚燃料芯',verb:'拌合',person:'liao',summary:'倒入星砂、加入凝光，缓慢拌合出一枚发光的架空燃料芯。跟着光点，一步一步完成封装。',lesson:'星砂、凝光及其聚合均为架空表现，没有现实燃料配方、比例或制作条件。',unlocks:['n11','n12','n13'],modules:[3],toy:2},
+ {id:'drive',title:'让动作传过去',verb:'传动',person:'ji',summary:'从输入轮接到输出轮，亲手摇动手柄，观察大轮如何转得更慢、更稳。',lesson:'理想传动中的转速与转矩存在取舍，实际装置还会损耗能量。',unlocks:['n20','n21','n22','n23'],modules:[4],toy:3},
  {id:'sequence',title:'让机关按时动作',verb:'编排',person:'ji',summary:'让门先打开，提台再升起，最后响铃。把你想要的顺序交给机关。',lesson:'顺序与联锁可以防止动作互相干涉；这里是民用机关演示。',unlocks:['n31'],modules:[5],toy:4},
  {id:'diagnose',title:'找出真正的问题',verb:'验证',person:'ce',summary:'昨天贴合的接缝，今天出现了变化。用一次有对照的实验，找出原因。',lesson:'木材受湿度变化影响会胀缩；试验应保持其余条件尽量一致。',unlocks:['n32'],modules:[6],toy:5},
  {id:'assembly',title:'最后一处，亲自检查',verb:'检验',person:'ce',summary:'找到图录中未闭合的检查标记，补齐后完成总装展示。',lesson:'地宫造物与巡天器终局属于架空推演。基础实验不能直接实现现代导弹。',unlocks:['n33','final'],modules:[7],toy:6}

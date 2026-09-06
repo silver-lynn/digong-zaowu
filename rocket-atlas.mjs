@@ -1,7 +1,7 @@
-import * as T from './vendor/three/three.module.js?v=110b4a9c1695';
-import {OrbitControls} from './vendor/three/OrbitControls.js?v=110b4a9c1695';
-import {buildAtlasParts} from './rocket-atlas-model.mjs?v=110b4a9c1695';
-export {PART_GROUPS,TOTAL_PARTS} from './rocket-atlas-model.mjs?v=110b4a9c1695';
+import * as T from './vendor/three/three.module.js?v=5061f3da916d';
+import {OrbitControls} from './vendor/three/OrbitControls.js?v=5061f3da916d';
+import {buildAtlasParts} from './rocket-atlas-model.mjs?v=5061f3da916d';
+export {PART_GROUPS,TOTAL_PARTS} from './rocket-atlas-model.mjs?v=5061f3da916d';
 export class RocketAtlas{
  constructor(canvas,onSelect){
   this.canvas=canvas;this.onSelect=onSelect;this.scene=new T.Scene();this.scene.background=new T.Color('#0b2029');
