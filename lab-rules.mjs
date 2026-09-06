@@ -1,4 +1,4 @@
-import {FLOWS,advanceFlow} from './craft-flow.mjs?v=433f66e85192';
+import {FLOWS,advanceFlow} from './craft-flow.mjs?v=dbeb0ef5889a';
 export const SAMPLE_DATA=[{id:'a',name:'薄木片',weight:2,bend:7,load:2},{id:'b',name:'层叠木片',weight:4,bend:3,load:7},{id:'c',name:'厚木块',weight:8,bend:1,load:9}];
 export function newTrial(id,level=2){return {id,passed:false,note:'',value:'',step:0,marks:[2,-3,1],seen:[],pieces:[],rotation:0,ingredients:[],stir:0,colors:'#4f8877',purpose:'strong',connections:[],sequence:['bell','lift','gate'],observed:false,control:'',checked:[],aligned:false}}
 export function trialAction(s,action,value){if(s.passed)return {ok:false,text:'本次发现已经记录。'};let ok=true,text='';if(FLOWS[s.id])return action==='step'?advanceFlow(s,value):{ok:false,text:'请使用当前高亮的操作。'};

@@ -1,8 +1,8 @@
-import * as T from './vendor/three/three.module.js?v=433f66e85192';
-import {OrbitControls} from './vendor/three/OrbitControls.js?v=433f66e85192';
-import {box,materials} from './palace-models.mjs?v=433f66e85192';
-import {makeWork,disposeGroup} from './atelier-models.mjs?v=433f66e85192';
-import {powered} from './atelier-data.mjs?v=433f66e85192';
+import * as T from './vendor/three/three.module.js?v=dbeb0ef5889a';
+import {OrbitControls} from './vendor/three/OrbitControls.js?v=dbeb0ef5889a';
+import {box,materials} from './palace-models.mjs?v=dbeb0ef5889a';
+import {makeWork,disposeGroup} from './atelier-models.mjs?v=dbeb0ef5889a';
+import {powered} from './atelier-data.mjs?v=dbeb0ef5889a';
 export class WorkStage{
  constructor(canvas){this.canvas=canvas;this.renderer=new T.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});this.renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.6));this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFSoftShadowMap;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMappingExposure=1.35;this.scene=new T.Scene();this.scene.background=new T.Color('#173c40');this.camera=new T.OrthographicCamera(-6,6,5,-5,.1,100);this.camera.position.set(10,9,13);this.controls=new OrbitControls(this.camera,canvas);this.controls.target.set(0,1.4,0);this.controls.enableDamping=true;this.controls.enablePan=false;this.controls.minZoom=.6;this.controls.maxZoom=3;this.controls.maxPolarAngle=Math.PI*.46;this.scene.add(new T.HemisphereLight(0xc4e8d8,0x394432,2.6));const light=new T.DirectionalLight(0xffddaa,4);light.position.set(-6,12,8);light.castShadow=true;light.shadow.mapSize.set(1024,1024);Object.assign(light.shadow.camera,{left:-10,right:10,top:10,bottom:-10});light.shadow.bias=-.001;this.scene.add(light);const rim=new T.DirectionalLight(0x90cdda,2);rim.position.set(8,6,-7);this.scene.add(rim);this.floor=new T.Group();const m=materials();box(this.floor,m.stone,22,.15,22,0,-.18);this.scene.add(this.floor);const grid=new T.GridHelper(18,36,0x779281,0x38585a);grid.position.y=-.08;grid.material.transparent=true;grid.material.opacity=.24;this.floor.add(grid);this.ray=new T.Raycaster();this.pointer=new T.Vector2();this.ro=new ResizeObserver(()=>this.resize());this.ro.observe(canvas);this.resize();this.last=0;this.time=0;this.frame=this.frame.bind(this);this.raf=requestAnimationFrame(this.frame)}
  resize(){const w=this.canvas.clientWidth,h=this.canvas.clientHeight;if(!w||!h)return;this.renderer.setSize(w,h,false);this.camera.left=-5.5*w/h;this.camera.right=5.5*w/h;this.camera.top=5.5;this.camera.bottom=-5.5;this.camera.updateProjectionMatrix()}

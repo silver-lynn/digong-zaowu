@@ -1,10 +1,10 @@
-import * as T from './vendor/three/three.module.js?v=433f66e85192';
-import {WorkStage} from './work-stage.mjs?v=433f66e85192';
-import {makePart} from './atelier-models.mjs?v=433f66e85192';
-import {box,cylinder,ring,materials} from './palace-models.mjs?v=433f66e85192';
-import {newTrial,trialAction,SAMPLE_DATA} from './lab-rules.mjs?v=433f66e85192';
-import {trialGuide} from './trial-guide.mjs?v=433f66e85192';
-import {chibi} from './story-revision.mjs?v=433f66e85192';
+import * as T from './vendor/three/three.module.js?v=dbeb0ef5889a';
+import {WorkStage} from './work-stage.mjs?v=dbeb0ef5889a';
+import {makePart} from './atelier-models.mjs?v=dbeb0ef5889a';
+import {box,cylinder,ring,materials} from './palace-models.mjs?v=dbeb0ef5889a';
+import {newTrial,trialAction,SAMPLE_DATA} from './lab-rules.mjs?v=dbeb0ef5889a';
+import {trialGuide} from './trial-guide.mjs?v=dbeb0ef5889a';
+import {chibi} from './story-revision.mjs?v=dbeb0ef5889a';
 const $=id=>document.getElementById(id),names={gate:'开门',lift:'升台',bell:'响铃'};
 export class ChronicleLab{
  constructor(chapter,onDone){this.chapter=chapter;this.onDone=onDone;this.state=newTrial(chapter.id,chapter.level);$('lab-guide').open=true;this.abort=new AbortController();this.dialog=$('lab-modal');$('lab-title').textContent=chapter.title;$('lab-kicker').textContent=chapter.verb+' · 留下一次亲手发现';$('lab-story').textContent=chapter.summary;$('lab-science').textContent=chapter.lesson;$('lab-feedback').textContent='';$('lab-done').disabled=true;this.dialog.showModal();try{this.stage=new WorkStage($('lab-canvas'));this.stage.controls.enableRotate=true;this.stage.onFrame=(dt,t)=>this.animate(dt,t)}catch{ $('lab-object-label').textContent='图形显示不可用，仍可使用右侧操作完成实验。' }this.render();this.visual();$('lab-guide').addEventListener('toggle',()=>this.guide(),{signal:this.abort.signal});$('lab-actions').addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(b)this.act(b.dataset.action,b.dataset.value)},{signal:this.abort.signal});$('lab-actions').addEventListener('input',e=>{if(e.target.dataset.mark!==undefined)this.act('mark',[Number(e.target.dataset.mark),e.target.value],false);if(e.target.id==='mix-color')this.act('color',e.target.value,false)},{signal:this.abort.signal});$('lab-done').onclick=()=>{if(this.state.passed)this.onDone(this.state)};

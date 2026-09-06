@@ -1,4 +1,4 @@
-import {FLOWS,flowStep} from './craft-flow.mjs?v=433f66e85192';
+import {FLOWS,flowStep} from './craft-flow.mjs?v=dbeb0ef5889a';
 export function trialGuide(s){
  if(s.passed)return {text:'完成了。点击“点亮本批零件”，把发现带回拆解图。',action:'done'};
  if(FLOWS[s.id]){const next=flowStep(s);return {text:next[1],label:next[0],action:'step',value:String(s.step||0)}}
